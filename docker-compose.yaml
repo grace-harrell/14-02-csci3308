@@ -19,7 +19,6 @@ services:
       - db
     ports:
       - '80:80'
-      - '443:443'
     volumes:
       - ./:/home/node/app
     command: 'npm start'

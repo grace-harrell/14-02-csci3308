@@ -57,7 +57,7 @@ const user = {
 };
 
 app.get("/login", (req, res) => {
-  res.render("pages/login");
+  res.render("pages/login.ejs");
 });
 
 // Login submission
@@ -101,7 +101,7 @@ const auth = (req, res, next) => {
 app.use(auth);
 
 app.get("/", (req, res) => {
-  res.render("pages/home", {
+  res.render("pages/home.ejs", {
     username: req.session.user.username,
     first_name: req.session.user.first_name,
     last_name: req.session.user.last_name,
@@ -114,8 +114,8 @@ app.get("/", (req, res) => {
 
 app.get("/logout", (req, res) => {
   req.session.destroy();
-  res.render("pages/logout");
+  res.render("pages/logout.ejs");
 });
 
-app.listen(3000);
-console.log("Server is listening on port 3000");
+app.listen(80);
+console.log("Server is listening on port 80");
