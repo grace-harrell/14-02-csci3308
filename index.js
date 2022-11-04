@@ -102,13 +102,13 @@ app.use(auth);
 
 app.get("/", (req, res) => {
   res.render("pages/home.ejs", {
-    username: req.session.user.username,
-    first_name: req.session.user.first_name,
-    last_name: req.session.user.last_name,
-    email: req.session.user.email,
-    year: req.session.user.year,
-    major: req.session.user.major,
-    degree: req.session.user.degree,
+    // username: req.session.user.username,
+    // first_name: req.session.user.first_name,
+    // last_name: req.session.user.last_name,
+    // email: req.session.user.email,
+    // year: req.session.user.year,
+    // major: req.session.user.major,
+    // degree: req.session.user.degree,
   });
 });
 
