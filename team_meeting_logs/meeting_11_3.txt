@@ -1,0 +1,10 @@
+- Session management
+- One story should be completely done so we can test it fully
+- Get the data done by end of this week
+    - dummy data to get students information
+    - create SQL file
+- Refine wireframes more
+- Directory will be set by end of this week
+- Pick up more features than just the login page or resister page
+    - do additional work and help your teammates
+    - pick up additional stories
