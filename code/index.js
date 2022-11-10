@@ -3,6 +3,7 @@ const app = express();
 const pgp = require("pg-promise")();
 const bodyParser = require("body-parser");
 const session = require("express-session");
+const bcrypt = require('bcrypt');
 
 // db config
 const dbConfig = {
@@ -45,16 +46,18 @@ app.use(
   })
 );
 
-const user = {
-  student_id: undefined,
-  username: undefined,
-  first_name: undefined,
-  last_name: undefined,
-  email: undefined,
-  year: undefined,
-  major: undefined,
-  degree: undefined,
-};
+
+
+
+
+app.get("/", (req, res) => {
+  res.render("pages/home.ejs");
+});
+
+app.get("/logout", (req, res) => {
+  req.session.destroy();
+  res.render("pages/logout.ejs");
+});
 
 app.get("/login", (req, res) => {
   res.render("pages/login.ejs");
@@ -62,33 +65,61 @@ app.get("/login", (req, res) => {
 
 // Login submission
 app.post("/login", (req, res) => {
-  const email = req.body.email;
+  /*
+    NOTE:
+      - I think that the username could be either a traditional username, or an email.
+      - We could modify the db to store emails and usernames, however for our purpose I dont think emails would be that useful.
+  */
   const username = req.body.username;
-  const query = "select * from students where students.email = $1";
-  const values = [email];
+  const password = req.body.password;
 
-  // get the student_id based on the emailid
-  db.one(query, values)
-    .then((data) => {
-      user.student_id = data.student_id;
-      user.username = username;
-      user.first_name = data.first_name;
-      user.last_name = data.last_name;
-      user.email = data.email;
-      user.year = data.year;
-      user.major = data.major;
-      user.degree = data.degree;
+  var query = 'select * from users where username = \'' + username + '\';';
+  console.log(query);
+  db.any(query)
+      .then(async function (data) {
+          console.log(data[0]);
+          if( data.length == 0) {
+            res.redirect('/login');
+          } else {
+            const match = await bcrypt.compare(password, data[0].password);
+            console.log(match);
+            if(match) {
+              console.log('login successful');
+              req.session.save();
+              res.redirect('/home');
+            } else {
+                res.redirect('/login');
+            }
+          }
 
-      req.session.user = user;
-      req.session.save();
-
-      res.redirect("/");
-    })
-    .catch((err) => {
-      console.log(err);
-      res.redirect("/login");
-    });
+      })
+      .catch(function (err) {
+          console.log(err);
+          res.redirect('/register');
+      });
 });
+
+app.post('/register', async (req, res) => {
+  /*
+    TODO:
+      - Registration needs a further process for inputting preferences, can also be submitted in the post request form.
+      - Change sql query to input those values into the db on post.
+      (is_admin, username, password, dorm_id, preferences, about_me)
+  */
+  const hash = await bcrypt.hash(req.body.password, 10);
+  var query = 'insert into users(is_admin, username, password, dorm_id, preferences, about_me) values (false, \'' + req.body.username + '\', \'' + hash + '\', 0, {0,0,0,0,0}, "testing");';
+  db.any(query)
+      .then(function (data) {
+          res.redirect('/login');
+      })
+      .catch(function (err) {
+          res.redirect('/register');
+      });
+});
+
+
+
+
 
 // Authentication middleware.
 const auth = (req, res, next) => {
@@ -99,23 +130,5 @@ const auth = (req, res, next) => {
 };
 
 app.use(auth);
-
-app.get("/", (req, res) => {
-  res.render("pages/home.ejs", {
-    username: req.session.user.username,
-    first_name: req.session.user.first_name,
-    last_name: req.session.user.last_name,
-    email: req.session.user.email,
-    year: req.session.user.year,
-    major: req.session.user.major,
-    degree: req.session.user.degree,
-  });
-});
-
-app.get("/logout", (req, res) => {
-  req.session.destroy();
-  res.render("pages/logout.ejs");
-});
-
 app.listen(80);
 console.log("Server is listening on port 80");
