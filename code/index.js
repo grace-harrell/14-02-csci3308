@@ -77,15 +77,19 @@ app.post("/login", (req, res) => {
   console.log(query);
   db.any(query)
       .then(async function (data) {
-          console.log(data);
-          const match = await bcrypt.compare(password, data[0].password);
-          console.log(match);
-          if(match) {
-            console.log('login successful');
-            req.session.save();
-            res.redirect('/home');
+          console.log(data[0]);
+          if( data.length == 0) {
+            res.redirect('/login');
           } else {
-              res.redirect('/login');
+            const match = await bcrypt.compare(password, data[0].password);
+            console.log(match);
+            if(match) {
+              console.log('login successful');
+              req.session.save();
+              res.redirect('/home');
+            } else {
+                res.redirect('/login');
+            }
           }
 
       })
@@ -100,9 +104,10 @@ app.post('/register', async (req, res) => {
     TODO:
       - Registration needs a further process for inputting preferences, can also be submitted in the post request form.
       - Change sql query to input those values into the db on post.
+      (is_admin, username, password, dorm_id, preferences, about_me)
   */
   const hash = await bcrypt.hash(req.body.password, 10);
-  var query = 'insert into users(username, password) values (\'' + req.body.username + '\', \'' + hash + '\');';
+  var query = 'insert into users(is_admin, username, password, dorm_id, preferences, about_me) values (false, \'' + req.body.username + '\', \'' + hash + '\', 0, {0,0,0,0,0}, "testing");';
   db.any(query)
       .then(function (data) {
           res.redirect('/login');
