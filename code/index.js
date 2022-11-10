@@ -64,7 +64,7 @@ app.get("/login", (req, res) => {
 });
 
 // Login submission
-app.post("/login", (req, res) => {
+app.post("/login", async (req, res) => {
   /*
     NOTE:
       - I think that the username could be either a traditional username, or an email.
@@ -77,18 +77,21 @@ app.post("/login", (req, res) => {
   console.log(query);
   db.any(query)
       .then(async function (data) {
-          console.log(data[0]);
-          if( data.length == 0) {
+          if (data.length == 0) {
             res.redirect('/login');
+          
           } else {
-            const match = await bcrypt.compare(password, data[0].password);
-            console.log(match);
-            if(match) {
+            let match = await bcrypt.compare(password, data[0].password);
+            match = true; // TEMP CHANGE THIS --------------------------------------------
+            if (match) {
+              req.session.user = {
+                username: username,
+              };
               console.log('login successful');
               req.session.save();
               res.redirect('/home');
             } else {
-                res.redirect('/login');
+              res.redirect('/login');
             }
           }
 
@@ -117,6 +120,71 @@ app.post('/register', async (req, res) => {
       });
 });
 
+app.post('/discover', (req, res) => {
+  const numPreferences = 5;
+  /*
+    TODO:
+     - Return json data containing information for users who the user might be interested in
+     - Compare user preferences
+     - Implement error message for invalid db queries
+
+    POST REQUEST:
+      REQ:
+       - Expects no data in body
+      RES:
+       - Returns no data, stores discovery data at req.session.user[1]
+  */
+
+  const finduserquery = 'select * from users where username = \'' + req.session.user.username + '\';';
+
+  // EXECUTE FIRST QUERY
+  db.any(finduserquery)
+    .then(function (userreqdata) {
+
+      const getusersquery = 'select username, dorm_id, preferences, about_me from users;';
+
+      // EXECUTE SECOND QUERY
+      db.any(getusersquery)
+        .then(function (allusers) {
+
+          // At this point, we have the info of the user who requested data, and the info of all users in the table.
+          // getusersquery should return users in json format as an array
+          let foundUsers = [];
+          let numFoundUsers = 0;
+
+          allusers.forEach(element => {
+            for (let i = 0; i < numPreferences; i++) {
+              if (element['preferences'][i] == userreqdata[0]['preferences'][i]) {
+                if (!foundUsers.includes(element)) {
+                  console.log('potential roommate located: ', element.username);
+                  foundUsers[numFoundUsers] = element;
+                  numFoundUsers++;
+                } 
+              }
+            }
+          });
+
+          //I assemble the discovered users into an array.
+          //This array can be directly passed on to the ejs for assembly into the page.
+          //I will store the json data in the req.session.user object for easy use.
+
+          req.session.user[1] = foundUsers;
+          res.redirect('/'); // CHANGE TO SOMEWHERE ELSE IF NEEDED.
+
+        })
+        .catch(function (err) {
+          console.log(err);
+          console.log('ERROR WITHIN SECOND QUERY');
+          res.redirect('/');
+        });
+    })
+    .catch(function (err) {
+      console.log(err);
+      console.log('ERROR WITHIN FIRST QUERY');
+      res.redirect('/');
+    });
+});
+
 
 
 
@@ -124,6 +192,7 @@ app.post('/register', async (req, res) => {
 // Authentication middleware.
 const auth = (req, res, next) => {
   if (!req.session.user) {
+    console.log('not logged in');
     return res.redirect("/login");
   }
   next();
