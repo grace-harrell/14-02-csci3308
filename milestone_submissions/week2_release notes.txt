@@ -1,5 +1,7 @@
-RoomMate Release Notes Week 2:
-Login in API created and implemented.
-UI for Login now available
-DB structure expanded upon to include tables for users, user matches, messages, and dorms
-Dummy data added for staging
+RoomMate Release Notes Week 2: 11/4/22 - 11/10/22
+
+New Features:
+ - Login in API created and implemented.
+ - UI for Login now available.
+ - DB structure expanded upon to include tables for users, user matches, messages, and dorms.
+ - Dummy data added for staging.
