@@ -92,7 +92,7 @@ app.post("/login", async (req, res) => {
               };
               console.log('login successful');
               req.session.save();
-              res.redirect('/home');
+              res.redirect('/');
             } else {
               res.redirect('/login');
             }
