@@ -232,5 +232,5 @@ app.get("/logout", (req, res) => {
   res.render("pages/logout.ejs");
 });
 
-app.listen(80);
-console.log("Server is listening on port 80");
+app.listen(3000);
+console.log("Server is listening on port 3000");
