@@ -62,6 +62,9 @@ app.get("/logout", (req, res) => {
 app.get("/login", (req, res) => {
   res.render("pages/login.ejs");
 });
+app.get("/roommates", (req, res) => {
+  res.render("pages/roommates.ejs");
+});
 
 // Login submission
 app.post("/login", async (req, res) => {
@@ -191,10 +194,10 @@ app.post('/discover', (req, res) => {
 
 // Authentication middleware.
 const auth = (req, res, next) => {
-  if (!req.session.user) {
-    console.log('not logged in');
-    return res.redirect("/login");
-  }
+  // if (!req.session.user) {
+  //   console.log('not logged in');
+  //   return res.redirect("/login");
+  // }
   next();
 };
 
