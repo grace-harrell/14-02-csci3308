@@ -1,0 +1,33 @@
+<%- include ('../partials/header') %> <%- include ('../partials/menu') %>
+
+<main>
+  <div class="container">
+    <h1>Welcome User: <%= username %></h1>
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">username</th>
+            <th scope="col">first_name</th>
+            <th scope="col">last_name</th>
+            <th scope="col">email</th>
+            <th scope="col">year</th>
+            <th scope="col">major</th>
+            <th scope="col">degree</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><%= username %></td>
+            <td><%= first_name %></td>
+            <td><%= last_name %></td>
+            <td><%= email %></td>
+            <td><%= year %></td>
+            <td><%= major %></td>
+            <td><%= degree %></td>
+          </tr>
+        </tbody>
+      </table>
+  </div>
+</main>
+
+<%- include ('../partials/footer') %>
