@@ -66,6 +66,11 @@ app.get("/roommates", (req, res) => {
   res.render("pages/roommates.ejs");
 });
 
+//making a register page 
+app.get("/register",(req, res) =>{
+  res.render("pages/register.ejs");
+})
+
 // Login submission
 app.post("/login", async (req, res) => {
   /*
