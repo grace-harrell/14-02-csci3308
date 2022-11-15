@@ -18,3 +18,16 @@ insert into users (is_admin, username, password, dorm_id, preferences, about_me)
 insert into users (is_admin, username, password, dorm_id, preferences, about_me) VALUES (False, 'John', 'password', 1, '{1,1,2,1,1}', 'i am a human being yes');
 insert into users (is_admin, username, password, dorm_id, preferences, about_me) VALUES (False, 'Greg', 'password', 2, '{2,1,1,3,2}', 'i am a human being yes');
 insert into users (is_admin, username, password, dorm_id, preferences, about_me) VALUES (False, 'Steven', 'password', 1, '{1,2,2,1,3}', 'i am a human being yes');
+
+insert into user_to_messages (recipient_id, message_id) VALUES (1, 1);
+insert into user_to_messages (recipient_id, message_id) VALUES (1, 2);
+insert into user_to_messages (recipient_id, message_id) VALUES (1, 3);
+insert into user_to_messages (recipient_id, message_id) VALUES (1, 4);
+insert into user_to_messages (recipient_id, message_id) VALUES (2, 5);
+
+
+insert into messages (message_id, sender_id, message) VALUES (1, 2, 'test 1');
+insert into messages (message_id, sender_id, message) VALUES (2, 3, 'test 2');
+insert into messages (message_id, sender_id, message) VALUES (3, 4, 'test 3');
+insert into messages (message_id, sender_id, message) VALUES (4, 5, 'test 4');
+insert into messages (message_id, sender_id, message) VALUES (5, 5, 'test 5');
