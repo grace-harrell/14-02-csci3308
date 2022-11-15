@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS user_matches;
-DROP TABLE IF EXISTS users_to_messages;
+DROP TABLE IF EXISTS user_to_messages;
 DROP TABLE IF EXISTS messages;
 DROP TABLE IF EXISTS dorms;
 

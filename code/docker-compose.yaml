@@ -18,7 +18,8 @@ services:
     depends_on:
       - db
     ports:
-      - ':3000'
+    # change it back to :3000 
+      - '3000:3000'
     volumes:
       - ./:/home/node/app
       - RoomMate:/var/lib/postgresql/data

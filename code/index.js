@@ -89,8 +89,10 @@ app.post("/login", async (req, res) => {
             if (match) {
               req.session.user = {
                 username: username,
+                user_id: data[0]['user_id'],
               };
               console.log('login successful');
+              console.log(req.session.user);
               req.session.save();
               res.redirect('/');
             } else {
@@ -186,6 +188,32 @@ app.post('/discover', (req, res) => {
       console.log('ERROR WITHIN FIRST QUERY');
       res.redirect('/');
     });
+});
+
+app.post('/getmessages', async (req, res) => {
+  /*
+    TODO:
+     - Move this code around as needed, this is just a proof of concept for the db queries.
+       If this code needs to be within a different request to make things work, that is okay.
+    POST REQUEST:
+     REQ:
+      - Send nothing, user ID will be pulled from the current session
+     RES:
+      - Returns a list of messages as json for displaying in ejs.
+  */
+  var query = 'select user_id, username, sender_id, message from users' +
+              ' inner join user_to_messages on user_id=recipient_id' +
+              ' inner join messages on user_to_messages.message_id=messages.message_id'+
+              ' where user_id=' + req.session.user['user_id'] + ';';
+  db.any(query)
+      .then(function (data) {
+          // This should be changed when the inbox has been figured out.
+          res.render('/views/pages/inbox.ejs', data);
+      })
+      .catch(function (err) {
+          res.redirect('/inbox');
+      });
+
 });
 
 
