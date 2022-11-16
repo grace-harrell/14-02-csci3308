@@ -26,8 +26,8 @@ insert into user_to_messages (recipient_id, message_id) VALUES (1, 4);
 insert into user_to_messages (recipient_id, message_id) VALUES (2, 5);
 
 
-insert into messages (message_id, sender_id, message) VALUES (1, 2, 'test 1');
-insert into messages (message_id, sender_id, message) VALUES (2, 3, 'test 2');
-insert into messages (message_id, sender_id, message) VALUES (3, 4, 'test 3');
-insert into messages (message_id, sender_id, message) VALUES (4, 5, 'test 4');
-insert into messages (message_id, sender_id, message) VALUES (5, 5, 'test 5');
+insert into messages (sender_id, message) VALUES (2, 'test 1');
+insert into messages (sender_id, message) VALUES (3, 'test 2');
+insert into messages (sender_id, message) VALUES (4, 'test 3');
+insert into messages (sender_id, message) VALUES (5, 'test 4');
+insert into messages (sender_id, message) VALUES (5, 'test 5');

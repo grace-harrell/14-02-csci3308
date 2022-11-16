@@ -46,26 +46,6 @@ app.use(
   })
 );
 
-
-
-
-
-app.get("/", (req, res) => {
-  res.render("pages/home.ejs");
-});
-
-app.get("/logout", (req, res) => {
-  req.session.destroy();
-  res.render("pages/logout.ejs");
-});
-
-app.get("/login", (req, res) => {
-  res.render("pages/login.ejs");
-});
-app.get("/roommates", (req, res) => {
-  res.render("pages/roommates.ejs");
-});
-
 // Login submission
 app.post("/login", async (req, res) => {
   /*
@@ -107,6 +87,10 @@ app.post("/login", async (req, res) => {
       });
 });
 
+app.get("/login", (req, res) => {
+  res.render("pages/login.ejs");
+});
+
 app.post('/register', async (req, res) => {
   /*
     TODO:
@@ -123,6 +107,38 @@ app.post('/register', async (req, res) => {
       .catch(function (err) {
           res.redirect('/register');
       });
+});
+
+app.get("/register", (req, res) => {
+  res.render('views/pages/register.ejs');
+});
+
+// Authentication middleware.
+const auth = (req, res, next) => {
+  if (!req.session.user) {
+    console.log('not logged in');
+    return res.redirect("/login");
+  }
+  next();
+};
+
+app.use(auth);
+// All pages which can be accessed without logging in must be above this app.use statement or it will just continuously redirect the user
+
+
+
+
+app.get("/", (req, res) => {
+  res.render("pages/home.ejs");
+});
+
+app.get("/logout", (req, res) => {
+  req.session.destroy();
+  res.render("pages/logout.ejs");
+});
+
+app.get("/roommates", (req, res) => {
+  res.render("pages/roommates.ejs");
 });
 
 app.post('/discover', (req, res) => {
@@ -200,15 +216,54 @@ app.post('/getmessages', async (req, res) => {
       - Send nothing, user ID will be pulled from the current session
      RES:
       - Returns a list of messages as json for displaying in ejs.
+      - Format of response:
+        [
+          {message: 'mes1', username: 'person who sent the message'},
+          {message: 'mes2', username: 'sender'},
+          etc...
+        ]
+        This should be accessed in the form res[index]['message'] for the message itself or res[index]['username'] for the sender username
   */
-  var query = 'select user_id, username, sender_id, message from users' +
-              ' inner join user_to_messages on user_id=recipient_id' +
-              ' inner join messages on user_to_messages.message_id=messages.message_id'+
-              ' where user_id=' + req.session.user['user_id'] + ';';
+  var query = 'select message, username from messages' +
+              ' inner join user_to_messages on messages.message_id=user_to_messages.message_id' +
+              ' inner join users on messages.sender_id=users.user_id' +
+              ' where user_to_messages.recipient_id=' + req.session.user['user_id'] + ';';
   db.any(query)
       .then(function (data) {
           // This should be changed when the inbox has been figured out.
-          res.render('/views/pages/inbox.ejs', data);
+          console.log(data);
+          //res.render('/views/pages/inbox.ejs', data);
+      })
+      .catch(function (err) {
+          res.redirect('/inbox');
+      });
+
+});
+
+app.post('/sendmessage', async (req, res) => {
+  /*
+    TODO:
+     - 
+    POST REQUEST:
+     REQ:
+      - Send username of recipient as recipient in post request body
+      - Send message as message in post request body
+     RES:
+      - Sends message and returns status response in json format.
+  */
+  var query1 = 'select user_id from users where username=\'' + req.body.recipient + '\';'; // Recipient ID
+  var senderId = req.session.user['user_id']; // Sender ID
+  var query2 = 'insert into messages (sender_id, message) values (' + senderId + ', \'' + req.body.message + '\');' // Insert message
+  db.any(query1)
+      .then(async function (data) {
+          var recipients = await db.any(query2);
+          var query3 = 'select message_id from messages where message=\'' + req.body.message + '\';' // Message ID
+          var query4 = 'insert into user_to_messages (recipient_id, message_id) values ('+ recipientID +', ' + messageID + ');'; //Link user to message
+
+          console.log(recipients);
+
+
+          //res.render('/views/pages/inbox.ejs', data);
       })
       .catch(function (err) {
           res.redirect('/inbox');
@@ -220,16 +275,9 @@ app.post('/getmessages', async (req, res) => {
 
 
 
-// Authentication middleware.
-const auth = (req, res, next) => {
-  // if (!req.session.user) {
-  //   console.log('not logged in');
-  //   return res.redirect("/login");
-  // }
-  next();
-};
 
-app.use(auth);
+
+//app.use(auth);
 
 app.get("/", (req, res) => {
   res.render("pages/home.ejs", {

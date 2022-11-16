@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS user_to_messages (
 );
 
 CREATE TABLE IF NOT EXISTS messages (
-    message_id integer,
+    message_id SERIAL PRIMARY KEY NOT NULL,
     sender_id integer,
     message VARCHAR(500)
 );
