@@ -128,18 +128,26 @@ app.use(auth);
 
 
 
+
+
 app.get("/", (req, res) => {
   res.render("pages/home.ejs");
 });
+
+
 
 app.get("/logout", (req, res) => {
   req.session.destroy();
   res.render("pages/logout.ejs");
 });
 
+
+
 app.get("/roommates", (req, res) => {
   res.render("pages/roommates.ejs");
 });
+
+
 
 app.post('/discover', (req, res) => {
   const numPreferences = 5;
@@ -206,6 +214,8 @@ app.post('/discover', (req, res) => {
     });
 });
 
+
+
 app.post('/getmessages', async (req, res) => {
   /*
     TODO:
@@ -224,9 +234,14 @@ app.post('/getmessages', async (req, res) => {
         ]
         This should be accessed in the form res[index]['message'] for the message itself or res[index]['username'] for the sender username
   */
+
+  // First I am gathering the important stuff, being the message text and the username, which is the data to be displayed to the user.
   var query = 'select message, username from messages' +
+              // This is going to match the messages to their senders
               ' inner join user_to_messages on messages.message_id=user_to_messages.message_id' +
+              // This matches the sender to the messages they sent
               ' inner join users on messages.sender_id=users.user_id' +
+              // Then this only will pull the messages with the current logged in user's id as the recipient.
               ' where user_to_messages.recipient_id=' + req.session.user['user_id'] + ';';
   db.any(query)
       .then(function (data) {
@@ -240,44 +255,44 @@ app.post('/getmessages', async (req, res) => {
 
 });
 
+
+
 app.post('/sendmessage', async (req, res) => {
   /*
     TODO:
      - 
     POST REQUEST:
      REQ:
-      - Send username of recipient as recipient in post request body
-      - Send message as message in post request body
+      - Send username of recipient as 'recipient' in post request body
+      - Send message as 'message' in post request body
      RES:
       - Sends message and returns status response in json format.
   */
-  var query1 = 'select user_id from users where username=\'' + req.body.recipient + '\';'; // Recipient ID
-  var senderId = req.session.user['user_id']; // Sender ID
-  var query2 = 'insert into messages (sender_id, message) values (' + senderId + ', \'' + req.body.message + '\');' // Insert message
+
+  // This query returns the recipient's user_id from the db.
+  var query1 = 'select user_id from users where username=\'' + req.body.recipient + '\';';
+  // Gathers the sender_id from the user's saved session data, populated on login.
+  var senderId = req.session.user['user_id']; 
   db.any(query1)
       .then(async function (data) {
-          var recipients = await db.any(query2);
-          var query3 = 'select message_id from messages where message=\'' + req.body.message + '\';' // Message ID
-          var query4 = 'insert into user_to_messages (recipient_id, message_id) values ('+ recipientID +', ' + messageID + ');'; //Link user to message
+          // This next line extracts the recipient's id from the data returned by the db.
+          var recipientID = data[0]['user_id'];
+          // This next query will insert the message data into the 'messages' table of the db, and return the serialized message_id primary key for inserting into the user_to_messages relation.
+          var messagequery = await db.any('insert into messages (sender_id, message) values (' + senderId + ', \'' + req.body.message + '\') returning message_id;');
+          // This next query will use the serialized primary key to link the recipient to the message sent.
+          var linkmessage = await db.any('insert into user_to_messages (recipient_id, message_id) values ('+ recipientID +', ' + messagequery[0]['message_id'] + ');');
 
-          console.log(recipients);
-
-
-          //res.render('/views/pages/inbox.ejs', data);
+          // Change as needed.
+          res.render('/views/pages/inbox.ejs', {"status":"Message has been sent!"});
       })
       .catch(function (err) {
+          console.log(err);
           res.redirect('/inbox');
       });
 
 });
 
 
-
-
-
-
-
-//app.use(auth);
 
 app.get("/", (req, res) => {
   res.render("pages/home.ejs", {
@@ -291,6 +306,8 @@ app.get("/", (req, res) => {
   });
 });
 
+
+
 app.get("/profile", (req, res) => {
   res.render("pages/profile.ejs", {
     username: req.session.user.username,
@@ -303,10 +320,16 @@ app.get("/profile", (req, res) => {
   });
 });
 
+
+
 app.get("/logout", (req, res) => {
   req.session.destroy();
   res.render("pages/logout.ejs");
 });
+
+
+
+
 
 app.listen(3000);
 console.log("Server is listening on port 3000");
