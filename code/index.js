@@ -88,14 +88,21 @@ app.post("/login", async (req, res) => {
       .then(async function (data) {
           if (data.length == 0) {
             res.redirect('/login');
-          
-          } else {
+          }
+          else
+          {
             let match = await bcrypt.compare(password, data[0].password);
             match = true; // TEMP CHANGE THIS --------------------------------------------
             if (match) {
               req.session.user = {
                 username: username,
                 user_id: data[0]['user_id'],
+                housing_id: data[0]['housing_id'],
+                graduation_year: data[0]['graduation_year'],
+                graduation_season_id: data[0]['graduation_season_id'],
+                min_rent: data[0]['min_rent'],
+                max_rent: data[0]['max_rent'],
+                about_me: data[0]['about_me'],
               };
               console.log('login successful');
               console.log(req.session.user);
@@ -318,17 +325,15 @@ app.post('/sendmessage', async (req, res) => {
 
 });
 
-
-
 app.get("/", (req, res) => {
   res.render("pages/home.ejs", {
     username: req.session.user.username,
-    first_name: req.session.user.first_name,
-    last_name: req.session.user.last_name,
-    email: req.session.user.email,
-    year: req.session.user.year,
-    major: req.session.user.major,
-    degree: req.session.user.degree,
+    housing_id: req.session.user.housing_id,
+    graduation_year: req.session.user.graduation_year,
+    graduation_season_id: req.session.user.graduation_season_id,
+    min_rent: req.session.user.min_rent,
+    max_rent: req.session.user.max_rent,
+    about_me: req.session.user.about_me,
   });
 });
 
@@ -337,12 +342,12 @@ app.get("/", (req, res) => {
 app.get("/profile", (req, res) => {
   res.render("pages/profile.ejs", {
     username: req.session.user.username,
-    first_name: req.session.user.first_name,
-    last_name: req.session.user.last_name,
-    email: req.session.user.email,
-    year: req.session.user.year,
-    major: req.session.user.major,
-    degree: req.session.user.degree,
+    housing_id: req.session.user.housing_id,
+    graduation_year: req.session.user.graduation_year,
+    graduation_season_id: req.session.user.graduation_season_id,
+    min_rent: req.session.user.min_rent,
+    max_rent: req.session.user.max_rent,
+    about_me: req.session.user.about_me,
   });
 });
 

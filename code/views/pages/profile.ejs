@@ -1,33 +1,139 @@
 <%- include ('../partials/header') %> <%- include ('../partials/menu') %>
 
 <main>
-  <div class="container">
-    <h1>Welcome User: <%= username %></h1>
-    <table class="table">
-        <thead>
-          <tr>
-            <th scope="col">username</th>
-            <th scope="col">first_name</th>
-            <th scope="col">last_name</th>
-            <th scope="col">email</th>
-            <th scope="col">year</th>
-            <th scope="col">major</th>
-            <th scope="col">degree</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><%= username %></td>
-            <td><%= first_name %></td>
-            <td><%= last_name %></td>
-            <td><%= email %></td>
-            <td><%= year %></td>
-            <td><%= major %></td>
-            <td><%= degree %></td>
-          </tr>
-        </tbody>
-      </table>
-  </div>
-</main>
+  <section class="vh-100" style="background-color: #CFD8D7;">
+    <div class="container py-5 h-20">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-12 col-md-16 col-lg-6 col-xl-5">
+          <div class="card shadow-2-strong" style="border-radius: 1rem; background-color: #B5C9C3;">
+            <div class="card-body p-4 text-center">
+              <form method="POST" action="/login">
+
+                <div class="form-outline mb-3">
+                  <div class="d-flex">
+                    <div class = "ml-auto-l">
+                      <h5>
+                        About Me
+                      </h5>
+                    </div>
+                  </div>
+                  <textarea type = "text" name= "about_me" id = "about_me" rows = "5" cols = "12" placeholder = "Tell us about yourself!" class = "form-control form-control-lg"/><%= about_me %></textarea>
+                </div>
+
+                <div class="form-outline mb-3">
+                  <div class="d-flex">
+                    <div class = "ml-auto-l">
+                      <h5>
+                        Desired/Expected Housing Location
+                      </h5>
+                    </div>
+                  </div>
+                  <select id="housing_id" name="Desired Housing" class="form-control form-control-lg" value="<%= housing_id %>">
+                    <option value="0">Unknown</option>
+                    <option value="1">Bear Creek Hall</option>
+                    <option value="2">Weber Hall</option>
+                    <option value="3">Aden Hall</option>
+                    <option value="4">Andrews Hall</option>
+                    <option value="5">Arnett Hall</option>
+                    <option value="6">Baker Hall</option>
+                    <option value="7">Brackett Hall</option>
+                    <option value="8">Buckingham Hall</option>
+                    <option value="9">Cheyenne Arapaho Hall</option>
+                    <option value="10">Cockerell Hall</option>
+                    <option value="11">Crosman Hall</option>
+                    <option value="12">Darley North Hall</option>
+                    <option value="13">Darley South Hall</option>
+                    <option value="14">Farrand Hall</option>
+                    <option value="15">Hallett Hall</option>
+                    <option value="16">Kittredge Central Hall</option>
+                    <option value="17">Kittredge West Hall</option>
+                    <option value="18">Libby Hall</option>
+                    <option value="19">Reed Hall</option>
+                    <option value="20">Sewall Hall</option>
+                    <option value="21">Smith Hall</option>
+                    <option value="22">Stearns East Hall</option>
+                    <option value="23">Stearns West Hall</option>
+                    <option value="24">Willard Hall</option>
+                    <option value="25">Williams Village East</option>
+                    <option value="26">Williams Village North</option>
+                    <option value="27">Pearl Street</option>
+                    <option value="28">North Boulder</option>
+                    <option value="29">The Hill</option>
+                    <option value="30">Martin Acres</option>
+                    <option value="31">East Campus</option>
+                    <option value="32">Main Campus</option>
+                    <option value="33">Central Boulder</option>
+                    <option value="34">East Boulder</option>
+                    <option value="35">Gunbarrel</option>
+                    <option value="36">Chautaqua</option>
+                    <option value="37">South Boulder</option>
+                  </select>
+                </div>
+
+                <div class="form-outline mb-3">
+                  <div class="d-flex">
+                    <div class = "ml-auto-l">
+                      <h5>
+                        Year of Graduation
+                      </h5>
+                    </div>
+                  </div>
+                  <input type = "number" id="graduation_year" name= "Graduation Year" placeholder = "Type the year you plan to graduate here." min="0" max="5000" class = "form-control form-control-lg" value="<%= graduation_year %>"/>
+                </div>
+
+                <div class="form-outline mb-3">
+                  <div class="d-flex">
+                    <div class = "ml-auto-l">
+                      <h5>
+                        Season of Graduation
+                      </h5>
+                    </div>
+                  </div>
+                  <select id="graduation_season_id" name="Graduation Season" class="form-control form-control-lg" selected="<%= graduation_season_id %>">
+                    <option value="0">Unknown</option>
+                    <option value="1">Spring</option>
+                    <option value="2">Summer</option>
+                    <option value="3">Fall</option>
+                  </select>
+                </div>
+
+                <div class="form-outline mb-3">
+                  <div class="d-flex">
+                    <div class = "ml-auto-l">
+                      <h5>
+                        Minimum Rent
+                      </h5>
+                    </div>
+                  </div>
+                  <input type = "number" id="minimum_rent" name= "Minimum Rent" placeholder = "Type the cheapest rent you'd pay here." min="0" max="5000" class = "form-control form-control-lg" value="<%= min_rent %>"/>
+                </div>
+
+                <div class="form-outline mb-3">
+                  <div class="d-flex">
+                    <div class = "ml-auto-l">
+                      <h5>
+                        Maximum Rent
+                      </h5>
+                    </div>
+                  </div>
+                  <input type = "number" id="maximum_rent" name= "Maximum Rent" placeholder = "Type the highest rent you'd pay here." min="0" max="5000" class = "form-control form-control-lg" value="<%= max_rent %>"/>
+                </div>
+
+              </form>
+
+              <container class="align-items-right">
+                <form method="POST">
+                  <div class="d-flex flex-row-reverse">
+                    <button class = "btn btn-primary btn-lg btn-block ml-auto-r" style = "background-color: #CFD8D7; color: black;" type ="submit">Confirm Changes</button>
+                  </div>
+                </form>
+              </container>
+    
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
 <%- include ('../partials/footer') %>
