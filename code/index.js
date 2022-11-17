@@ -61,7 +61,6 @@ app.post("/login", async (req, res) => {
   db.any(query)
       .then(async function (data) {
           if (data.length == 0) {
-            console.log("data length was 0.");
             res.redirect('/login');
           }
           else
