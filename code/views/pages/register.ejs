@@ -10,9 +10,10 @@
           <div class="card shadow-2-strong" style="border-radius: 1rem; background-color: #B5C9C3;">
             <div class="card-body p-5 text-center">
   
-              <h3 class="mb-5"style = "border-bottom-style:solid;">Log in</h3>
+              <h3 class="mb-5"style = "border-bottom-style:solid;">Register Page</h3>
               
-              <form method="POST" action="/login">
+              <form method="POST" action="/register">
+
               <div class="form-outline mb-4">
                 <input type="text" name="username" id="username" placeholder = "username" class="form-control form-control-lg" />
                 <!-- <label class="form-label" for="username">Username</label> -->
@@ -22,13 +23,30 @@
                 <input type="password" name="password" id="password" placeholder= "password" class="form-control form-control-lg" />
                 <!-- <label class="form-label" for="typePassword">Password</label> -->
               </div>
-              <div id = "buttons">
-              <button class="btn btn-primary btn-lg btn-block" style = "margin-right: 40px; background-color: #CFD8D7; color: black;"type="submit">Login</button>
+              <div class = "form-outline mb-4">
+                <input type = "text" name = "dorm_id" id = "dorm_id" placeholder="dorm_id" class = "form-control form-control-lg"/>
               </div>
-              </form>
+              <div class = "form-outline mb-4">
+                <input type = "text" name = "preferences" id = "preferences" placeholder="Not sure how we want to do preferences" class = "form-control form-control-lg"/>
+
+              </div>
               
-                <button onClick="window.location.href='/register'"  class = "btn btn-primary btn-lg btn-block" style = "margin-right: 40px; background-color: #CFD8D7; color: black;"  type ="submit" >Create Account</button>
-             
+
+
+              <div class = "form-outline mb-4">
+                <textarea name = "aboutme" id = "aboutme" placeholder="About Me" class = "form-control form-control-lg"></textarea>
+              </div>
+
+
+
+              <div id = "buttons">
+              <!-- <button class="btn btn-primary btn-lg btn-block" style = "margin-right: 40px; background-color: #CFD8D7; color: black;"type="submit">Login</button> -->
+              </div>
+              
+            
+                <button class = "btn btn-primary btn-lg btn-block" style = "margin-right: 25px; background-color: #CFD8D7; color: black;"  type ="submit">Create Account</button>
+        
+              </form>
     
             </div>
           </div>

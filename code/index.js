@@ -46,6 +46,32 @@ app.use(
   })
 );
 
+
+
+
+
+
+app.get("/", (req, res) => {
+  res.render("pages/home.ejs");
+});
+
+app.get("/logout", (req, res) => {
+  req.session.destroy();
+  res.render("pages/logout.ejs");
+});
+
+app.get("/login", (req, res) => {
+  res.render("pages/login.ejs");
+});
+app.get("/roommates", (req, res) => {
+  res.render("pages/roommates.ejs");
+});
+
+//making a register page 
+app.get("/register",(req, res) =>{
+  res.render("pages/register.ejs");
+})
+
 // Login submission
 app.post("/login", async (req, res) => {
   /*
