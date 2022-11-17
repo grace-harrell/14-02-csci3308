@@ -3,6 +3,7 @@ November 17 2022:
 Updated Features:
 - DB has been modified to include more information about users and their preferences.
 - A page for displaying the current user's profile information.
+- Added more dummy data for testing the db and APIs and extended dummy data to fill the new user fields.
 
 New Features:
 - API for discovering potential roommates based on preferences has been added.
