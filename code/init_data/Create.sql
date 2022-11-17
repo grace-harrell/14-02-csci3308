@@ -9,9 +9,12 @@ CREATE TABLE IF NOT EXISTS users (
     is_admin boolean NOT NULL,
     username VARCHAR(100) NOT NULL,
     password VARCHAR(100) NOT NULL,
-    dorm_id integer,
-    preferences integer ARRAY[5],
-    about_me VARCHAR(100)
+    housing_id integer,
+    graduation_year integer,
+    graduation_season_id integer,
+    min_rent integer,
+    max_rent integer,
+    about_me VARCHAR(500)
 );
 
 CREATE TABLE IF NOT EXISTS user_matches (
