@@ -1,0 +1,12 @@
+November 17 2022:
+
+Updated Features:
+- DB has been modified to include more information about users and their preferences.
+- A page for displaying the current user's profile information.
+
+New Features:
+- API for discovering potential roommates based on preferences has been added.
+- Frontend for homepage and login page implemented and integrated with the login APIs for user sessions.
+- APIs for sending messages to other users and checking the user's inbox implemented in the backend.
+- Match api in testing stages
+
