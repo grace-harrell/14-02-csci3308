@@ -55,7 +55,6 @@ app.post("/login", async (req, res) => {
   */
   const username = req.body.username;
   const password = req.body.password;
-  console.log("Attempting to login as " + req.body.username + ".");
 
   var query = 'select * from users where username = \'' + username + '\';';
   console.log(query);
@@ -70,7 +69,6 @@ app.post("/login", async (req, res) => {
             let match = await bcrypt.compare(password, data[0].password);
             match = true; // TEMP CHANGE THIS --------------------------------------------
             if (match) {
-              console.log('matched!');
               req.session.user = {
                 username: username,
                 user_id: data[0]['user_id'],
@@ -86,7 +84,6 @@ app.post("/login", async (req, res) => {
               req.session.save();
               res.redirect('/');
             } else {
-              console.log('no match.');
               res.redirect('/login');
             }
           }
