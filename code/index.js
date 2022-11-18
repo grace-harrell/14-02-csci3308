@@ -5,7 +5,16 @@ const bodyParser = require("body-parser");
 const session = require("express-session");
 const bcrypt = require("bcrypt");
 
-// db config
+
+
+/*
+  NOTES FOR EDITING INDEX JS:
+    - All pages that should be able to be accessed need to be placed before the app.use(auth) statement.
+    - Any changes to the db Create or Insert files will require a postgres shell inserts to take effect.
+*/
+
+
+
 const dbConfig = {
   host: "db",
   port: 5432,
@@ -14,9 +23,10 @@ const dbConfig = {
   password: process.env.POSTGRES_PASSWORD,
 };
 
+
 const db = pgp(dbConfig);
 
-// db test
+
 db.connect()
   .then((obj) => {
     // Can check the server version here (pg-promise v10.1.0+):
@@ -27,11 +37,10 @@ db.connect()
     console.log("ERROR:", error.message || error);
   });
 
-// set the view engine to ejs
 app.set("view engine", "ejs");
 app.use(bodyParser.json());
 
-// set session
+
 app.use(
   session({
     secret: "XASDASDA",
@@ -40,44 +49,39 @@ app.use(
   })
 );
 
+
 app.use(
   bodyParser.urlencoded({
     extended: true,
   })
 );
 
+
 app.get("/", (req, res) => {
   res.render("pages/home.ejs");
 });
+
 
 app.get("/logout", (req, res) => {
   req.session.destroy();
   res.render("pages/logout.ejs");
 });
 
+
 app.get("/login", (req, res) => {
   res.render("pages/login.ejs");
 });
-app.get("/roommates", (req, res) => {
-  res.render("pages/roommates.ejs");
-});
 
-// app.get("/profile", (req, res) => {
-//   res.render("pages/profile.ejs");
-// });
 
-//making a register page
+/* TODO:
+    - Make register page
+*/
 app.get("/register", (req, res) => {
   res.render("pages/register.ejs");
 });
 
-// Login submission
+
 app.post("/login", async (req, res) => {
-  /*
-    NOTE:
-      - I think that the username could be either a traditional username, or an email.
-      - We could modify the db to store emails and usernames, however for our purpose I dont think emails would be that useful.
-  */
   const username = req.body.username;
   const password = req.body.password;
 
@@ -100,6 +104,7 @@ app.post("/login", async (req, res) => {
             min_rent: data[0]["min_rent"],
             max_rent: data[0]["max_rent"],
             about_me: data[0]["about_me"],
+            foundUsers: [],
           };
           console.log("login successful");
           console.log(req.session.user);
@@ -116,9 +121,11 @@ app.post("/login", async (req, res) => {
     });
 });
 
+
 app.get("/login", (req, res) => {
   res.render("pages/login.ejs");
 });
+
 
 app.post("/register", async (req, res) => {
   /*
@@ -162,9 +169,11 @@ app.post("/register", async (req, res) => {
       });
 });
 
+
 app.get("/register", (req, res) => {
   res.render("views/pages/register.ejs");
 });
+
 
 // Authentication middleware.
 const auth = (req, res, next) => {
@@ -175,6 +184,12 @@ const auth = (req, res, next) => {
   next();
 };
 
+
+
+
+
+
+// --------------------------------------------------------------------------------------------------------------------------------------
 app.use(auth);
 // All pages which can be accessed without logging in must be above this app.use statement or it will just continuously redirect the user
 
@@ -182,45 +197,19 @@ app.get("/", (req, res) => {
   res.render("pages/home.ejs");
 });
 
+
 app.get("/logout", (req, res) => {
   req.session.destroy();
   res.render("pages/logout.ejs");
 });
+
 
 app.get("/roommates", (req, res) => {
   res.render("pages/roommates.ejs");
 });
 
 
-
-app.post('/discover', (req, res) => {
-  /*
-    TODO:
-     - Return json data containing information for users who the user might be interested in
-     - Compare user preferences
-     - Implement error message for invalid db queries
-
-    POST REQUEST:
-      REQ:
-       - Expects no data in body
-      RES:
-       - Returns no data, stores discovery data at req.session.user[1]
-
-
-      CREATE TABLE IF NOT EXISTS users (
-          user_id SERIAL PRIMARY KEY NOT NULL,
-          is_admin boolean NOT NULL,
-          username VARCHAR(100) NOT NULL,
-          password VARCHAR(100) NOT NULL,
-          housing_id integer,
-          graduation_year integer,
-          graduation_season_id integer,
-          min_rent integer,
-          max_rent integer,
-          about_me VARCHAR(500)
-      );
-  */
-
+app.get("/roommates", (req, res) => {
   const finduserquery =
     "select * from users where username = '" + req.session.user.username + "';";
 
@@ -242,41 +231,34 @@ app.post('/discover', (req, res) => {
             if(userreqdata[0]['graduation_year'] == element['graduation_year']) {
               if(userreqdata[0]['min_rent'] > (element['min_rent'] - 200) && userreqdata[0]['min_rent'] < (element['min_rent'] + 200)) {
                 if(userreqdata[0]['min_rent'] > (element['min_rent'] - 200) && userreqdata[0]['min_rent'] < (element['min_rent'] + 200)) {
-                  console.log('potential roommate located: ', element.username);
-                  foundUsers[numFoundUsers] = element;
-                  numFoundUsers++;
+                  if (!foundUsers.includes(element)) {
+                    foundUsers[numFoundUsers] = element;
+                    numFoundUsers++;
+                  }
+                  
                 }
               }
             }
           });
 
-          /*for (let i = 0; i < numPreferences; i++) {
-              if (element['preferences'][i] == userreqdata[0]['preferences'][i]) {
-                if (!foundUsers.includes(element)) {
-                  
-                } 
-              }
-            } */
-
           //I assemble the discovered users into an array.
           //This array can be directly passed on to the ejs for assembly into the page.
           //I will store the json data in the req.session.user object for easy use.
 
-          req.session.user[1] = foundUsers;
-          res.redirect("/"); // CHANGE TO SOMEWHERE ELSE IF NEEDED.
+          req.session.user['foundUsers'] = foundUsers;
+          res.render("pages/roommates.ejs", {foundUsers: req.session.user['foundUsers']});
         })
         .catch(function (err) {
           console.log(err);
           console.log("ERROR WITHIN SECOND QUERY");
-          res.redirect("/");
         });
     })
     .catch(function (err) {
       console.log(err);
       console.log("ERROR WITHIN FIRST QUERY");
-      res.redirect("/");
     });
 });
+
 
 app.post("/getmessages", async (req, res) => {
   /*
