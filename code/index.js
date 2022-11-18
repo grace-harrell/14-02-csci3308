@@ -59,7 +59,62 @@ app.get("/login", (req, res) => {
   res.render("pages/login.ejs");
 });
 app.get("/roommates", (req, res) => {
-  res.render("pages/roommates.ejs");
+  const finduserquery =
+    "select * from users where username = '" + req.session.user.username + "';";
+
+  // EXECUTE FIRST QUERY
+  db.any(finduserquery)
+    .then(function (userreqdata) {
+
+      const getusersquery = 'select username, housing_id, graduation_year, min_rent, max_rent from users;';
+
+      // EXECUTE SECOND QUERY
+      db.any(getusersquery)
+        .then(function (allusers) {
+          // At this point, we have the info of the user who requested data, and the info of all users in the table.
+          // getusersquery should return users in json format as an array
+          let foundUsers = [];
+          let numFoundUsers = 0;
+
+          allusers.forEach(element => {
+            if(userreqdata[0]['graduation_year'] == element['graduation_year']) {
+              if(userreqdata[0]['min_rent'] > (element['min_rent'] - 200) && userreqdata[0]['min_rent'] < (element['min_rent'] + 200)) {
+                if(userreqdata[0]['min_rent'] > (element['min_rent'] - 200) && userreqdata[0]['min_rent'] < (element['min_rent'] + 200)) {
+                  console.log('potential roommate located: ', element.username);
+                  foundUsers[numFoundUsers] = element;
+                  numFoundUsers++;
+                }
+              }
+            }
+          });
+
+          /*for (let i = 0; i < numPreferences; i++) {
+              if (element['preferences'][i] == userreqdata[0]['preferences'][i]) {
+                if (!foundUsers.includes(element)) {
+                  
+                } 
+              }
+            } */
+
+          //I assemble the discovered users into an array.
+          //This array can be directly passed on to the ejs for assembly into the page.
+          //I will store the json data in the req.session.user object for easy use.
+
+          req.session.user['foundUsers'] = foundUsers;
+          res.redirect("/"); // CHANGE TO SOMEWHERE ELSE IF NEEDED.
+        })
+        .catch(function (err) {
+          console.log(err);
+          console.log("ERROR WITHIN SECOND QUERY");
+          res.redirect("/");
+        });
+    })
+    .catch(function (err) {
+      console.log(err);
+      console.log("ERROR WITHIN FIRST QUERY");
+      res.redirect("/");
+    });
+  res.render("pages/roommates.ejs", {foundUsers: req.session.user['foundUsers']});
 });
 
 // app.get("/profile", (req, res) => {
@@ -100,6 +155,7 @@ app.post("/login", async (req, res) => {
             min_rent: data[0]["min_rent"],
             max_rent: data[0]["max_rent"],
             about_me: data[0]["about_me"],
+            foundUsers: [],
           };
           console.log("login successful");
           console.log(req.session.user);
@@ -221,61 +277,7 @@ app.post('/discover', (req, res) => {
       );
   */
 
-  const finduserquery =
-    "select * from users where username = '" + req.session.user.username + "';";
-
-  // EXECUTE FIRST QUERY
-  db.any(finduserquery)
-    .then(function (userreqdata) {
-
-      const getusersquery = 'select username, housing_id, graduation_year, min_rent, max_rent from users;';
-
-      // EXECUTE SECOND QUERY
-      db.any(getusersquery)
-        .then(function (allusers) {
-          // At this point, we have the info of the user who requested data, and the info of all users in the table.
-          // getusersquery should return users in json format as an array
-          let foundUsers = [];
-          let numFoundUsers = 0;
-
-          allusers.forEach(element => {
-            if(userreqdata[0]['graduation_year'] == element['graduation_year']) {
-              if(userreqdata[0]['min_rent'] > (element['min_rent'] - 200) && userreqdata[0]['min_rent'] < (element['min_rent'] + 200)) {
-                if(userreqdata[0]['min_rent'] > (element['min_rent'] - 200) && userreqdata[0]['min_rent'] < (element['min_rent'] + 200)) {
-                  console.log('potential roommate located: ', element.username);
-                  foundUsers[numFoundUsers] = element;
-                  numFoundUsers++;
-                }
-              }
-            }
-          });
-
-          /*for (let i = 0; i < numPreferences; i++) {
-              if (element['preferences'][i] == userreqdata[0]['preferences'][i]) {
-                if (!foundUsers.includes(element)) {
-                  
-                } 
-              }
-            } */
-
-          //I assemble the discovered users into an array.
-          //This array can be directly passed on to the ejs for assembly into the page.
-          //I will store the json data in the req.session.user object for easy use.
-
-          req.session.user[1] = foundUsers;
-          res.redirect("/"); // CHANGE TO SOMEWHERE ELSE IF NEEDED.
-        })
-        .catch(function (err) {
-          console.log(err);
-          console.log("ERROR WITHIN SECOND QUERY");
-          res.redirect("/");
-        });
-    })
-    .catch(function (err) {
-      console.log(err);
-      console.log("ERROR WITHIN FIRST QUERY");
-      res.redirect("/");
-    });
+  
 });
 
 app.post("/getmessages", async (req, res) => {
