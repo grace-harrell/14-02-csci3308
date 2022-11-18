@@ -17,7 +17,6 @@
                             <img src="https://cdn.mos.cms.futurecdn.net/ntFmJUZ8tw3ULD3tkBaAtf.jpg" class="d-block w-100" alt="..."/>
                             <div class="carousel-caption d-none d-md-block">
                               <!-- <a href="https://github.com/CSCI3308-Fall22/lab1-initial-setup-meihecht.git">Project Link</a> -->
-                              <%= foundUsers %>
                             </div>
                           </div>
                           <div class="carousel-item">
@@ -41,8 +40,10 @@
                         </button>
                       </div>
 
-      
-                  <h3 class="mb-5"style = "border-bottom-style:solid;">Person's Information here?</h3>
+                                <!-- HERES AN EXAMPLE OF HOW YOU WOULD ACCESS THE USER'S DATA.-->
+                  <h3 class="mb-5"style = "border-bottom-style:solid;">
+                    <%= foundUsers[0]['username'] %>
+                  </h3>
                   <h4>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nec tortor non ex porttitor sollicitudin.</h4>
                   <button class="btn btn-primary btn-lg btn-block" style = "margin-right: 40px; background-color: #CFD8D7; color: black; "type="submit">Match</button>
                   

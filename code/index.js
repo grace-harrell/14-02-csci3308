@@ -80,9 +80,11 @@ app.get("/roommates", (req, res) => {
             if(userreqdata[0]['graduation_year'] == element['graduation_year']) {
               if(userreqdata[0]['min_rent'] > (element['min_rent'] - 200) && userreqdata[0]['min_rent'] < (element['min_rent'] + 200)) {
                 if(userreqdata[0]['min_rent'] > (element['min_rent'] - 200) && userreqdata[0]['min_rent'] < (element['min_rent'] + 200)) {
-                  console.log('potential roommate located: ', element.username);
-                  foundUsers[numFoundUsers] = element;
-                  numFoundUsers++;
+                  if (!foundUsers.includes(element)) {
+                    foundUsers[numFoundUsers] = element;
+                    numFoundUsers++;
+                  }
+                  
                 }
               }
             }
@@ -101,20 +103,18 @@ app.get("/roommates", (req, res) => {
           //I will store the json data in the req.session.user object for easy use.
 
           req.session.user['foundUsers'] = foundUsers;
-          res.redirect("/"); // CHANGE TO SOMEWHERE ELSE IF NEEDED.
+          res.render("pages/roommates.ejs", {foundUsers: req.session.user['foundUsers']});
         })
         .catch(function (err) {
           console.log(err);
           console.log("ERROR WITHIN SECOND QUERY");
-          res.redirect("/");
         });
     })
     .catch(function (err) {
       console.log(err);
       console.log("ERROR WITHIN FIRST QUERY");
-      res.redirect("/");
     });
-  res.render("pages/roommates.ejs", {foundUsers: req.session.user['foundUsers']});
+  
 });
 
 // app.get("/profile", (req, res) => {
