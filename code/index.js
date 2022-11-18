@@ -126,18 +126,42 @@ app.get("/login", (req, res) => {
 
 app.post('/register', async (req, res) => {
   /*
-    TODO:
-      - Registration needs a further process for inputting preferences, can also be submitted in the post request form.
-      - Change sql query to input those values into the db on post.
       (is_admin, username, password, dorm_id, preferences, about_me)
+
+      CREATE TABLE IF NOT EXISTS users (
+        user_id SERIAL PRIMARY KEY NOT NULL,
+        is_admin boolean NOT NULL,
+        username VARCHAR(100) NOT NULL,
+        password VARCHAR(100) NOT NULL,
+        housing_id integer,
+        graduation_year integer,
+        graduation_season_id integer,
+        min_rent integer,
+        max_rent integer,
+        about_me VARCHAR(500)
+      );
   */
+  const is_admin = false;
+  const username = req.body.username;
+  const housing_id = req.body.housing_id;
+  const graduation_year = req.body.graduation_year;
+  const graduation_season_id = req.body.graduation_season_id;
+  const min_rent = req.body.min_rent;
+  const max_rent = req.body.max_rent;
+  const about_me = req.body.about_me;
   const hash = await bcrypt.hash(req.body.password, 10);
-  var query = 'insert into users(is_admin, username, password, dorm_id, preferences, about_me) values (false, \'' + req.body.username + '\', \'' + hash + '\', 0, {0,0,0,0,0}, "testing");';
+  var query = 'insert into users (is_admin, username, password, housing_id, graduation_year, graduation_season_id, min_rent, max_rent, about_me) values ' + 
+              '(False, \'' + req.body.username + '\', \'' + hash + '\', ' + housing_id + ', ' + graduation_year + ', 0, ' +
+              min_rent + ', ' + max_rent + ', \'' + about_me + '\')';
+
+  console.log(query);
   db.any(query)
       .then(function (data) {
+          console.log(data);
           res.redirect('/login');
       })
       .catch(function (err) {
+          console.log(err);
           res.redirect('/register');
       });
 });
