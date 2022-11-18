@@ -1,5 +1,7 @@
 <%- include ('../partials/header') %> <%- include ('../partials/menu') %>
 
+
+
 <main>
   <section class="vh-100" style="background-color: #CFD8D7;">
     <div class="container py-5 h-20">
@@ -7,6 +9,35 @@
         <div class="col-12 col-md-16 col-lg-6 col-xl-5">
           <div class="card shadow-2-strong" style="border-radius: 1rem; background-color: #B5C9C3;">
             <div class="card-body p-4 text-center">
+                <div class="container">
+                    <h1><%= username %></h1>
+                    <table class="table">
+                        <thead>
+                          <tr>
+                            <th scope="col">username</th>
+                            <th scope="col">housing id</th>
+                            <th scope="col">graduation year</th>
+                            <th scope="col">min rent</th>
+                            <th scope="col">max rent</th>
+                            <th scope="col">about_me</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td><%= username %></td>
+                            <td><%= housing_id %></td>
+                            <td><%= graduation_year %></td>
+                            <td><%= min_rent %></td>
+                            <td><%= max_rent %></td>
+                            <td><%= about_me %></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                  </div>
+                  <button onClick={handleEdit}>
+                    <Plus />
+                    <span>Edit</span>
+                </button>
               <form method="POST" action="/login">
 
                 <div class="form-outline mb-3">
@@ -17,7 +48,7 @@
                       </h5>
                     </div>
                   </div>
-                  <textarea type = "text" name= "about_me" id = "about_me" rows = "5" cols = "12" placeholder = "Tell us about yourself!" class = "form-control form-control-lg"/><%= about_me %></textarea>
+                  <textarea type = "text" name= "about_me" id = "about_me" rows = "5" cols = "12" class = "form-control form-control-lg"/><%= about_me %></textarea>
                 </div>
 
                 <div class="form-outline mb-3">
@@ -119,21 +150,18 @@
                   <input type = "number" id="maximum_rent" name= "Maximum Rent" placeholder = "Type the highest rent you'd pay here." min="0" max="5000" class = "form-control form-control-lg" value="<%= max_rent %>"/>
                 </div>
 
-              </form>
 
               <container class="align-items-right">
-                <form method="POST">
                   <div class="d-flex flex-row-reverse">
-                    <button class = "btn btn-primary btn-lg btn-block ml-auto-r" style = "background-color: #CFD8D7; color: black;" type ="submit">Confirm Changes</button>
+                    <button input type= "submit" class = "btn btn-primary btn-lg btn-block ml-auto-r" style = "background-color: #CFD8D7; color: black;" type ="submit">Confirm Changes</button>
                   </div>
-                </form>
               </container>
-    
+            </form>
             </div>
           </div>
         </div>
       </div>
     </div>
   </section>
-
+</main>
 <%- include ('../partials/footer') %>
