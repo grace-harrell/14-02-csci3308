@@ -207,7 +207,6 @@ app.get("/roommates", (req, res) => {
 
 
 app.post('/discover', (req, res) => {
-  const numPreferences = 5;
   /*
     TODO:
      - Return json data containing information for users who the user might be interested in
@@ -219,6 +218,20 @@ app.post('/discover', (req, res) => {
        - Expects no data in body
       RES:
        - Returns no data, stores discovery data at req.session.user[1]
+
+
+      CREATE TABLE IF NOT EXISTS users (
+          user_id SERIAL PRIMARY KEY NOT NULL,
+          is_admin boolean NOT NULL,
+          username VARCHAR(100) NOT NULL,
+          password VARCHAR(100) NOT NULL,
+          housing_id integer,
+          graduation_year integer,
+          graduation_season_id integer,
+          min_rent integer,
+          max_rent integer,
+          about_me VARCHAR(500)
+      );
   */
 
   const finduserquery = 'select * from users where username = \'' + req.session.user.username + '\';';
@@ -227,7 +240,7 @@ app.post('/discover', (req, res) => {
   db.any(finduserquery)
     .then(function (userreqdata) {
 
-      const getusersquery = 'select username, dorm_id, preferences, about_me from users;';
+      const getusersquery = 'select username, housing_id, graduation_year, min_rent, max_rent from users;';
 
       // EXECUTE SECOND QUERY
       db.any(getusersquery)
@@ -239,16 +252,24 @@ app.post('/discover', (req, res) => {
           let numFoundUsers = 0;
 
           allusers.forEach(element => {
-            for (let i = 0; i < numPreferences; i++) {
-              if (element['preferences'][i] == userreqdata[0]['preferences'][i]) {
-                if (!foundUsers.includes(element)) {
+            if(userreqdata[0]['graduation_year'] == element['graduation_year']) {
+              if(userreqdata[0]['min_rent'] > (element['min_rent'] - 200) && userreqdata[0]['min_rent'] < (element['min_rent'] + 200)) {
+                if(userreqdata[0]['min_rent'] > (element['min_rent'] - 200) && userreqdata[0]['min_rent'] < (element['min_rent'] + 200)) {
                   console.log('potential roommate located: ', element.username);
                   foundUsers[numFoundUsers] = element;
                   numFoundUsers++;
-                } 
+                }
               }
             }
           });
+
+          /*for (let i = 0; i < numPreferences; i++) {
+              if (element['preferences'][i] == userreqdata[0]['preferences'][i]) {
+                if (!foundUsers.includes(element)) {
+                  
+                } 
+              }
+            } */
 
           //I assemble the discovered users into an array.
           //This array can be directly passed on to the ejs for assembly into the page.
