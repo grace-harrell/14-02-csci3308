@@ -1,61 +1,54 @@
 <%- include ('../partials/header') %> <%- include ('../partials/menu') %>
 <main>
-    <section class="vh-100" style="background-color: #CFD8D7;">
-        <div class="container py-5 h-100">
-          <div class="row d-flex justify-content-center align-items-center h-100">
-            <div class="col-12 col-md-8 col-lg-6 col-xl-5">
-              <div class="card shadow-2-strong" style="border-radius: 1rem; background-color: #B5C9C3;">
-                <div class="card-body text-center">
-                    <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="false" >
-                        <div class="carousel-indicators">
-                          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
-                        </div>
-                        <div class="carousel-inner" >
-                          <div class="carousel-item active">
-                            <img src="https://cdn.mos.cms.futurecdn.net/ntFmJUZ8tw3ULD3tkBaAtf.jpg" class="d-block w-100" alt="..."/>
-                            <div class="carousel-caption d-none d-md-block">
-                              <!-- <a href="https://github.com/CSCI3308-Fall22/lab1-initial-setup-meihecht.git">Project Link</a> -->
-                            </div>
-                          </div>
-                          <div class="carousel-item">
-                            <img src="https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/alpe-di-siusi-sunrise-with-sassolungo-or-langkofel-royalty-free-image-1623254127.jpg" class="d-block w-100" alt="...">
-                            <div class="carousel-caption d-none d-md-block">
-                            </div>
-                          </div>
-                          <div class="carousel-item">
-                            <img src="https://images.pexels.com/photos/210243/pexels-photo-210243.jpeg?cs=srgb&dl=pexels-pixabay-210243.jpg&fm=jpg" class="d-block w-100" alt="...">
-                            <div class="carousel-caption d-none d-md-block">
-                            </div>
-                          </div>
-                        </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
-                          <span class="carousel-control-prev-icon" aria-hidden="true" style= "background-color:black; margin-top: 100px;"></span>
-                          <span class="visually-hidden">Previous</span>
-                        </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
-                          <span class="carousel-control-next-icon" aria-hidden="true" style= "background-color:black; margin-top: 100px;"></span>
-                          <span class="visually-hidden">Next</span>
-                        </button>
-                      </div>
+  <div class="page-content page-container" id="page-content" style = "background-color: #CFD8D7;">
+    <div class="padding">
+        <div class="row container d-flex justify-content-center">
 
-                                <!-- HERES AN EXAMPLE OF HOW YOU WOULD ACCESS THE USER'S DATA.-->
-                  <h3 class="mb-5"style = "border-bottom-style:solid;">
-                    <%= foundUsers[0]['username'] %>
-                  </h3>
-                  <h4>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nec tortor non ex porttitor sollicitudin.</h4>
-                  <button class="btn btn-primary btn-lg btn-block" style = "margin-right: 40px; background-color: #CFD8D7; color: black; "type="submit">Match</button>
-                  
-    
-        
+<div class="col-lg-8 grid-margin stretch-card" style = "background-color: #CFD8D7; padding-top: 50px;">
+              <div class="card" style = "background-color:#B5C9C3;">
+                <div class="card-body">
+                  <h4 class="card-title" Style = "text-align: center;">Roommates</h4>
+                  <p class="card-description" style = "text-align: center;">
+                    Find a Roommate
+                  </p>
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>Name</th>
+                          <th>Min Rent</th>
+                          <th>Max Rent</th>
+                          <th>Graduation Year</th>
+                          <th>About Me</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% foundUsers.forEach(element => { %>
+                          <tr>
+                            <td> <%= element['username'] %></td>
+                            <td><%= element['min_rent'] %> </td>
+                            <td> <%= element['max_rent'] %></td>
+                            <td><%= element['graduation_year']%></td>
+                            <td><%= element['about_me']%></td>
+                            <td>
+                              <a>MACTH button?</a>
+                            </td>
+                          
+                          </tr>
+      
+                        <%}) %> 
+
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-    
+            
+            </div>
+              </div>
+            </div>
 </main>
 
 

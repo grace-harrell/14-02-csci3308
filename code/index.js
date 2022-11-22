@@ -212,7 +212,7 @@ app.get("/roommates", (req, res) => {
   db.any(finduserquery)
     .then(function (userreqdata) {
 
-      const getusersquery = 'select username, housing_id, graduation_year, min_rent, max_rent from users;';
+      const getusersquery = 'select username, housing_id, graduation_year, min_rent, max_rent,about_me from users;';
 
       // EXECUTE SECOND QUERY
       db.any(getusersquery)
