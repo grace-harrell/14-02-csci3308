@@ -205,11 +205,6 @@ app.get("/logout", (req, res) => {
 
 
 app.get("/roommates", (req, res) => {
-  res.render("pages/roommates.ejs");
-});
-
-
-app.get("/roommates", (req, res) => {
   const finduserquery =
     "select * from users where username = '" + req.session.user.username + "';";
 
@@ -231,7 +226,7 @@ app.get("/roommates", (req, res) => {
             if(userreqdata[0]['graduation_year'] == element['graduation_year']) {
               if(userreqdata[0]['min_rent'] > (element['min_rent'] - 200) && userreqdata[0]['min_rent'] < (element['min_rent'] + 200)) {
                 if(userreqdata[0]['min_rent'] > (element['min_rent'] - 200) && userreqdata[0]['min_rent'] < (element['min_rent'] + 200)) {
-                  if (!foundUsers.includes(element)) {
+                  if (!foundUsers.includes(element) && !(element['username'] == req.session.user.username)) {
                     foundUsers[numFoundUsers] = element;
                     numFoundUsers++;
                   }
