@@ -205,11 +205,6 @@ app.get("/logout", (req, res) => {
 
 
 app.get("/roommates", (req, res) => {
-  res.render("pages/roommates.ejs");
-});
-
-
-app.get("/roommates", (req, res) => {
   const finduserquery =
     "select * from users where username = '" + req.session.user.username + "';";
 
