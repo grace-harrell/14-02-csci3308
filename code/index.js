@@ -105,6 +105,7 @@ app.post("/login", async (req, res) => {
             max_rent: data[0]["max_rent"],
             about_me: data[0]["about_me"],
             foundUsers: [],
+            messages: [],
           };
           console.log("login successful");
           console.log(req.session.user);
@@ -257,7 +258,7 @@ app.get("/roommates", (req, res) => {
 });
 
 
-app.post("/getmessages", async (req, res) => {
+app.get("/inbox", async (req, res) => {
   /*
     TODO:
      - Move this code around as needed, this is just a proof of concept for the db queries.
@@ -291,10 +292,10 @@ app.post("/getmessages", async (req, res) => {
     .then(function (data) {
       // This should be changed when the inbox has been figured out.
       console.log(data);
-      //res.render('/views/pages/inbox.ejs', data);
+      res.render('pages/inbox.ejs', {messages: data});
     })
     .catch(function (err) {
-      res.redirect("/inbox");
+      res.redirect("/");
     });
 });
 
@@ -313,6 +314,7 @@ app.post("/sendmessage", async (req, res) => {
   // This query returns the recipient's user_id from the db.
   var query1 =
     "select user_id from users where username='" + req.body.recipient + "';";
+  console.log(query1);
   // Gathers the sender_id from the user's saved session data, populated on login.
   var senderId = req.session.user["user_id"];
   db.any(query1)
@@ -337,9 +339,7 @@ app.post("/sendmessage", async (req, res) => {
       );
 
       // Change as needed.
-      res.render("/views/pages/inbox.ejs", {
-        status: "Message has been sent!",
-      });
+      res.redirect('/inbox');
     })
     .catch(function (err) {
       console.log(err);
@@ -371,6 +371,7 @@ app.post("/updateprofile", (req, res) => {
               max_rent: data[0]["max_rent"],
               about_me: data[0]["about_me"],
               foundUsers: [],
+              messages: [],
             };
             console.log("session struct refreshed with new information.");
             req.session.save();
@@ -419,6 +420,7 @@ app.get("/profile", async (req, res) => {
     about_me: req.session.user.about_me,
   });
 });
+
 
 app.get("/logout", (req, res) => {
   req.session.destroy();

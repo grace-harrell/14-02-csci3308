@@ -1,0 +1,49 @@
+<%- include ("../partials/header") %> 
+<%- include ("../partials/menu") %>
+
+
+<main>
+  <section class="vh-1000" style="background-color: #CFD8D7;">
+    <div class="container py-5 h-100">
+
+    <form action="/sendmessage" method="POST">
+        <div class="container p-3">
+            <div class="form-group">
+                <label for="recipient">Recipient:</label>
+                <input type="text" class="form-control" name="recipient" id="recipient">
+            </div>
+            <div class="form-group">
+                <label for="message">Message:</label>
+                <input type="text" class="form-control" name="message" id="message">
+            </div>
+        </div>
+
+        <input type="submit" class="btn btn-primary" value="Send Message">
+
+    </form>
+
+    <div class="container p-5">    
+        <div class="row">
+            <div class="col"><b>Sender</b></div>
+            <div class="col"><b>Message</b></div>
+        </div>
+        
+        <% messages.forEach(element => { %>
+        <hr>
+        <div class="row">
+            <div class="col gy-4">
+                <%= element['username'] %>
+            </div> <div class="col gy-4">
+                <%= element['message'] %>
+            </div>
+        </div>
+        <% }); %>
+
+        </div>
+    </div>
+  </section>
+
+</main>
+
+
+<%- include ('../partials/footer') %>
