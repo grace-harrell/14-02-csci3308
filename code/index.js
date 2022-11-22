@@ -212,7 +212,7 @@ app.get("/roommates", (req, res) => {
   db.any(finduserquery)
     .then(function (userreqdata) {
 
-      const getusersquery = 'select username, housing_id, graduation_year, min_rent, max_rent from users;';
+      const getusersquery = 'select username, housing_id, graduation_year, min_rent, max_rent, about_me from users;';
 
       // EXECUTE SECOND QUERY
       db.any(getusersquery)
@@ -344,6 +344,46 @@ app.post("/sendmessage", async (req, res) => {
       res.redirect("/inbox");
     });
 });
+
+
+app.post("/updateprofile", (req, res) => {
+  var query = 'update users set about_me = \'' + req.body.about_me + '\', housing_id = ' +
+              req.body.housing_id + ', graduation_year = ' + req.body.graduation_year + ', min_rent = ' +
+              req.body.min_rent + ', max_rent = ' + req.body.max_rent + ' where username = \'' + req.session.user.username + '\';';
+  
+  db.any(query)
+    .then(function (data) {
+      var query = "select * from users where username = '" + req.session.user.username + "';";
+      db.any(query)
+        .then(async function (data) {
+          if (data.length == 0) {
+            res.redirect("/login");
+          } else {
+            req.session.user = {
+              username: data[0]['username'],
+              user_id: data[0]["user_id"],
+              housing_id: data[0]["housing_id"],
+              graduation_year: data[0]["graduation_year"],
+              graduation_season_id: data[0]["graduation_season_id"],
+              min_rent: data[0]["min_rent"],
+              max_rent: data[0]["max_rent"],
+              about_me: data[0]["about_me"],
+              foundUsers: [],
+            };
+            console.log("session struct refreshed with new information.");
+            req.session.save();
+          }
+        })
+        .then(function (data) {
+          res.redirect("/profile");
+        });
+    })
+    .catch(function (err) {
+      console.log("Error in updateprofile db query.");
+      res.redirect("/");
+    });
+});
+
 
 app.get("/", (req, res) => {
   res.render("pages/home.ejs", {
