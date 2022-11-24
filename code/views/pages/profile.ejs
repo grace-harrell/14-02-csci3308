@@ -9,36 +9,7 @@
         <div class="col-12 col-md-16 col-lg-6 col-xl-5">
           <div class="card shadow-2-strong" style="border-radius: 1rem; background-color: #B5C9C3;">
             <div class="card-body p-4 text-center">
-                <div class="container">
-                    <h1><%= username %></h1>
-                    <table class="table">
-                        <thead>
-                          <tr>
-                            <th scope="col">username</th>
-                            <th scope="col">housing id</th>
-                            <th scope="col">graduation year</th>
-                            <th scope="col">min rent</th>
-                            <th scope="col">max rent</th>
-                            <th scope="col">about_me</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td><%= username %></td>
-                            <td><%= housing_id %></td>
-                            <td><%= graduation_year %></td>
-                            <td><%= min_rent %></td>
-                            <td><%= max_rent %></td>
-                            <td><%= about_me %></td>
-                          </tr>
-                        </tbody>
-                      </table>
-                  </div>
-                  <button onClick={handleEdit}>
-                    <Plus />
-                    <span>Edit</span>
-                </button>
-              <form method="POST" action="/login">
+              <form method="POST" action="/updateprofile">
 
                 <div class="form-outline mb-3">
                   <div class="d-flex">
@@ -48,7 +19,7 @@
                       </h5>
                     </div>
                   </div>
-                  <textarea type = "text" name= "about_me" id = "about_me" rows = "5" cols = "12" class = "form-control form-control-lg"/><%= about_me %></textarea>
+                  <input type = "text" name= "about_me" id = "about_me" rows = "5" cols = "12" class = "form-control form-control-lg" value="<%= about_me %>"/>
                 </div>
 
                 <div class="form-outline mb-3">
@@ -59,7 +30,7 @@
                       </h5>
                     </div>
                   </div>
-                  <select id="housing_id" name="Desired Housing" class="form-control form-control-lg" value="<%= housing_id %>">
+                  <select id="housing_id" name="housing_id" class="form-control form-control-lg" value="<%= housing_id %>">
                     <option value="0">Unknown</option>
                     <option value="1">Bear Creek Hall</option>
                     <option value="2">Weber Hall</option>
@@ -109,7 +80,7 @@
                       </h5>
                     </div>
                   </div>
-                  <input type = "number" id="graduation_year" name= "Graduation Year" placeholder = "Type the year you plan to graduate here." min="0" max="5000" class = "form-control form-control-lg" value="<%= graduation_year %>"/>
+                  <input type = "number" id="graduation_year" name= "graduation_year" placeholder = "Type the year you plan to graduate here." min="0" max="5000" class = "form-control form-control-lg" value="<%= graduation_year %>"/>
                 </div>
 
                 <div class="form-outline mb-3">
@@ -136,7 +107,7 @@
                       </h5>
                     </div>
                   </div>
-                  <input type = "number" id="minimum_rent" name= "Minimum Rent" placeholder = "Type the cheapest rent you'd pay here." min="0" max="5000" class = "form-control form-control-lg" value="<%= min_rent %>"/>
+                  <input type = "number" id="min_rent" name= "min_rent" placeholder = "Type the cheapest rent you'd pay here." min="0" max="5000" class = "form-control form-control-lg" value="<%= min_rent %>"/>
                 </div>
 
                 <div class="form-outline mb-3">
@@ -147,7 +118,7 @@
                       </h5>
                     </div>
                   </div>
-                  <input type = "number" id="maximum_rent" name= "Maximum Rent" placeholder = "Type the highest rent you'd pay here." min="0" max="5000" class = "form-control form-control-lg" value="<%= max_rent %>"/>
+                  <input type = "number" id="max_rent" name= "max_rent" placeholder = "Type the highest rent you'd pay here." min="0" max="5000" class = "form-control form-control-lg" value="<%= max_rent %>"/>
                 </div>
 
 
