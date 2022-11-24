@@ -56,6 +56,10 @@ app.use(
   })
 );
 
+app.get('/logo.jpg', function (req, res) {
+  res.sendFile(__dirname + "/views/img/logo.jpg");
+});
+
 
 app.get("/", (req, res) => {
   res.render("pages/home.ejs");
@@ -352,6 +356,9 @@ app.post("/updateprofile", (req, res) => {
   var query = 'update users set about_me = \'' + req.body.about_me + '\', housing_id = ' +
               req.body.housing_id + ', graduation_year = ' + req.body.graduation_year + ', min_rent = ' +
               req.body.min_rent + ', max_rent = ' + req.body.max_rent + ' where username = \'' + req.session.user.username + '\';';
+      
+  console.log(query);
+  
   
   db.any(query)
     .then(function (data) {
@@ -385,6 +392,7 @@ app.post("/updateprofile", (req, res) => {
       console.log("Error in updateprofile db query.");
       res.redirect("/");
     });
+    
 });
 
 
