@@ -248,7 +248,7 @@ app.get("/roommates", (req, res) => {
           //I will store the json data in the req.session.user object for easy use.
 
           req.session.user['foundUsers'] = foundUsers;
-          res.render("pages/roommates.ejs", {foundUsers: req.session.user['foundUsers']});
+          res.render("pages/roommates.ejs", {foundUsers: req.session.user['foundUsers'], reqUser: req.session.user.username});
         })
         .catch(function (err) {
           console.log(err);
@@ -283,7 +283,7 @@ app.get("/inbox", async (req, res) => {
 
   // First I am gathering the important stuff, being the message text and the username, which is the data to be displayed to the user.
   var query =
-    "select message, username from messages" +
+    "select message, username, messages.message_id from messages" +
     // This is going to match the messages to their senders
     " inner join user_to_messages on messages.message_id=user_to_messages.message_id" +
     // This matches the sender to the messages they sent
@@ -343,7 +343,11 @@ app.post("/sendmessage", async (req, res) => {
       );
 
       // Change as needed.
-      res.redirect('/inbox');
+      if(req.body.matching) {
+        res.redirect('/roommates')
+      } else {
+        res.redirect('/inbox');
+      }
     })
     .catch(function (err) {
       console.log(err);
@@ -393,6 +397,54 @@ app.post("/updateprofile", (req, res) => {
       res.redirect("/");
     });
     
+});
+
+app.post("/deletemessage", (req, res) => {
+  /*
+    TODO:
+      - 
+    REQ:
+      - send the message_id as message_id in the post request.
+    RES:
+      - will redirect to /inbox after the message is deleted
+  */
+
+  var query1 = "select * from user_to_messages where message_id = " + req.body.message_id;
+  var query2 = "delete from messages where message_id = " + req.body.message_id;
+  var query3 = "delete from user_to_messages where message_id = " + req.body.message_id;
+
+  db.any(query1)
+    .then(function (data1) {
+      
+      if(data1[0]['recipient_id'] == req.session.user['user_id']) {
+        console.log("good request found user");
+        console.log(data1);
+
+        
+        db.any(query2)
+        .then(function (data2) {
+
+          db.any(query3)
+            .then(function (data3) {
+
+                res.redirect("/inbox");
+
+            })
+            .catch(function (err) {
+              console.log("Error in deletemessage." + err);
+            });
+
+        })
+        .catch(function (err) {
+          console.log("Error in deletemessage." + err);
+        });
+
+      }
+    })
+    .catch(function (err) {
+      console.log("Error in deletemessage." + err);
+    });
+
 });
 
 
