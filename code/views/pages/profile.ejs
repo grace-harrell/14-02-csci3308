@@ -3,13 +3,19 @@
 
 
 <main>
-  <section class="vh-100" style="background-color: #CFD8D7;">
+  <section class="page-content page-container" id="page-content" style = "background-color: #CFD8D7;">
     <div class="container py-5 h-20">
       <div class="row d-flex justify-content-center align-items-center h-100">
-        <div class="col-12 col-md-16 col-lg-6 col-xl-5">
+        <div class="col-12 col-md-10 col-lg-8 col-xl-8">
           <div class="card shadow-2-strong" style="border-radius: 1rem; background-color: #B5C9C3;">
             <div class="card-body p-4 text-center">
-              <form method="POST" action="/updateprofile">
+
+              <p class="card-description position-relative py-3" style = "text-align: center;">
+                <img src="https://i.imgur.com/IQOI8gj.gif">
+              </p>
+              <div class="pb-1 mt-0" style = "border-bottom-style:solid; "></div>
+              
+              <form class="pt-5" method="POST" action="/updateprofile">
 
                 <div class="form-outline mb-3">
                   <div class="d-flex">
@@ -19,7 +25,7 @@
                       </h5>
                     </div>
                   </div>
-                  <input type = "text" name= "about_me" id = "about_me" rows = "5" cols = "12" class = "form-control form-control-lg" value="<%= about_me %>"/>
+                  <textarea name="about_me" id ="about_me" placeholder="Tell us about yourself!" rows="5" class="form-control form-control-lg"><%= about_me %></textarea>
                 </div>
 
                 <div class="form-outline mb-3">

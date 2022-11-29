@@ -3,44 +3,87 @@
 
 
 <main>
-  <section class="vh-1000" style="background-color: #CFD8D7;">
-    <div class="container py-5 h-100">
+  <section class="page-content page-container" id="page-content" style = "background-color: #CFD8D7;">
 
-    <form action="/sendmessage" method="POST">
-        <div class="container p-3">
-            <div class="form-group">
-                <label for="recipient">Recipient:</label>
-                <input type="text" class="form-control" name="recipient" id="recipient">
+            <div class="container py-5 h-100">
+              <div class="d-flex justify-content-center align-items-center h-100">
+                <div class="col-12 col-md-10 col-lg-8 col-xl-8">
+                  
+                  <div class="card shadow-2-strong text-center px-5" style="border-radius: 1rem; background-color: #B5C9C3;">
+                    <div class="card-body py-4 px-0">
+
+                        <div class="container pb-3">
+                            <div class="row position-relative">
+                                <div class="col-2 pb-5">
+                                    <img class="position-absolute start-0"src="https://i.imgur.com/YUKaPud.gif">
+                                </div>
+                                <div class="col-8 pb-4 mt-4">
+                                    <img src="https://i.imgur.com/tHNMK4t.gif">
+                                    <div class="mt-4" style = "border-bottom-style:solid; "></div>
+                                </div>
+                                <div class="col-2 pb-5">
+                                    <img class="position-absolute end-0" src="https://i.imgur.com/iIjkvZh.gif">
+                                </div>
+                            </div>
+                        </div>
+                    
+                        <h3 class="mb-4 mt-4">Received Messages</h3>
+                        <div class="mb-4" style = "border-bottom-style:solid;"></div>
+
+                        <div class="container p-3 pt-1">    
+                            <div class="row">
+                                <div class="col"><b>Sender</b></div>
+                                <div class="col"><b>Message</b></div>
+                            </div>
+                            
+                            <% messages.forEach(element => { %>
+                            <hr>
+                            <div class="row">
+                                <div class="col">
+                                    <%= element['username'] %>
+                                </div> <div class="col">
+                                    <%= element['message'] %>
+                                </div>
+                            </div>
+                            <% }); %>
+                    
+                            </div>
+                        </div>
+
+                        <h3 class="mb-4">Send a Message</h3>
+                        <div class="mb-4" style = "border-bottom-style:solid;"></div>
+                      
+                        <form class="pb-5" action="/sendmessage" method="POST">
+                            <div class="container p-3">
+                                <div class="form-group pb-3">
+                                    <div class="d-flex">
+                                        <div class = "ml-auto-l">
+                                          <h5>
+                                            Recipient
+                                          </h5>
+                                        </div>
+                                      </div>
+                                    <input type="text" class="form-control" name="recipient" id="recipient">
+                                </div>
+                                <div class="form-group pb-3">
+                                    <div class="d-flex">
+                                        <div class = "ml-auto-l">
+                                          <h5>
+                                            Message
+                                          </h5>
+                                        </div>
+                                      </div>
+                                    <textarea name="message" id="message" rows="5" class="form-control form-control-lg"></textarea>
+                                </div>
+                            </div>
+                            <button input type= "submit" class = "btn btn-primary btn-lg btn-block ml-auto-r" style = "background-color: #CFD8D7; color: black;" type ="submit"> Send Message </button>
+                        </form>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="form-group">
-                <label for="message">Message:</label>
-                <input type="text" class="form-control" name="message" id="message">
-            </div>
-        </div>
-
-        <input type="submit" class="btn btn-primary" value="Send Message">
-
-    </form>
-
-    <div class="container p-5">    
-        <div class="row">
-            <div class="col"><b>Sender</b></div>
-            <div class="col"><b>Message</b></div>
-        </div>
-        
-        <% messages.forEach(element => { %>
-        <hr>
-        <div class="row">
-            <div class="col gy-4">
-                <%= element['username'] %>
-            </div> <div class="col gy-4">
-                <%= element['message'] %>
-            </div>
-        </div>
-        <% }); %>
-
-        </div>
-    </div>
   </section>
 
 </main>
