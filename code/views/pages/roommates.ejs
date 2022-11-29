@@ -2,45 +2,73 @@
 <main>
   <div class="page-content page-container" id="page-content" style = "background-color: #CFD8D7;">
     <div class="padding">
-        <div class="row container d-flex justify-content-center">
+        <div class="container d-flex justify-content-center p-5">
 
-<div class="col-lg-8 grid-margin stretch-card" style = "background-color: #CFD8D7; padding-top: 50px;">
+          <div class="col-lg-8 grid-margin stretch-card" style = "background-color: #CFD8D7; padding-top: 50px;">
               <div class="card" style = "background-color:#B5C9C3;">
                 <div class="card-body">
-                  <h4 class="card-title" Style = "text-align: center;">Roommates</h4>
-                  <p class="card-description" style = "text-align: center;">
-                    Find a Roommate
+                  <p class="card-description position-relative pt-3 pb-2" style = "text-align: center;">
+                    <img src="https://i.imgur.com/2rdztLF.gif">
                   </p>
-                  <div class="table-responsive">
-                    <table class="table">
-                      <thead>
-                        <tr>
-                          <th>Name</th>
-                          <th>Min Rent</th>
-                          <th>Max Rent</th>
-                          <th>Graduation Year</th>
-                          <th>About Me</th>
-                          <th></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <% foundUsers.forEach(element => { %>
-                          <tr>
-                            <td> <%= element['username'] %></td>
-                            <td><%= element['min_rent'] %> </td>
-                            <td> <%= element['max_rent'] %></td>
-                            <td><%= element['graduation_year']%></td>
-                            <td><%= element['about_me']%></td>
-                            <td>
-                              <a>MACTH button?</a>
-                            </td>
-                          
-                          </tr>
-      
-                        <%}) %> 
+                  <div class="pb-1 mt-4" style = "border-bottom-style:solid; "></div>
+                  
 
-                      </tbody>
-                    </table>
+                  <div class="container mt-5">
+                    <div class="column">
+                      <% foundUsers.forEach(element => { %>
+
+                        <div class="card shadow-2-strong row-3 p-1 mb-3 position-relative" style = "background-color: #CFD8D7;">
+                          <!-- Replace with local image if possible -->
+                          <div class="container mt-3">
+                            <div class="row">
+                              <div class="col-2">
+                                <img width="100" height="100" src="https://media.istockphoto.com/id/1223671392/vector/default-profile-picture-avatar-photo-placeholder-vector-illustration.jpg?s=612x612&w=0&k=20&c=s0aTdmT5aU6b8ot7VKm11DeID6NctRCpB755rA1BIP0=">
+                              </div>
+                              <div class="col-10">
+                                  <h3><%= element['username'] %></h3>
+                                  <div class="mb-2 pt-2" style = "border-bottom-style:solid;"></div>
+                                  <div class="container p-0">
+                                    <div class="row">
+                                      <div class="col-6">
+                                        <p>Rent Range: $<%= element['min_rent'] %> - $<%= element['max_rent'] %></p>
+                                      </div>
+                                      <div class="col-6">
+                                        <p>Graduation Year: <%= element['graduation_year']%></p>
+                                      </div>
+                                    </div>
+                                  </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="container mt-3 pb-3">
+                            <div class="row"> 
+                              <div class="col-10">
+                                &emsp;&emsp;<%= element['about_me'] %>
+                              </div>
+                              <div class="col-2 position-absolute end-0">
+                                <button onClick="window.location.href='/'"  class = "btn btn-outline-danger btn-lg btn-block" style = "background-color: #FBC6FA; color: rgb(255, 0, 140);">
+                                  Match
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                          
+
+                        </div>
+                        <!-- <tr>
+                          <td><%= element['username'] %></td>
+                          <td><%= element['min_rent'] %> </td>
+                          <td><%= element['max_rent'] %></td>
+                          <td><%= element['graduation_year']%></td>
+                          <td><%= element['about_me']%></td>
+                          <td>
+                            <a>Match Button</a>
+                          </td>
+                        </tr> -->
+
+                      <%}) %> 
+                    </div>                      
                   </div>
                 </div>
               </div>
