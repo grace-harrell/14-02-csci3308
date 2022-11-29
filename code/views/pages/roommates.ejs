@@ -47,9 +47,12 @@
                                 &emsp;&emsp;<%= element['about_me'] %>
                               </div>
                               <div class="col-2 position-absolute end-0">
-                                <button onClick="window.location.href='/'"  class = "btn btn-outline-danger btn-lg btn-block" style = "background-color: #FBC6FA; color: rgb(255, 0, 140);">
-                                  Match
-                                </button>
+                                <form action="/sendmessage" method="POST">
+                                  <input type="hidden" style="visibility: hidden;" name="recipient" id="recipient" value="<%= element['username'] %>">
+                                  <input type="hidden" style="visibility: hidden;" name="matching" id="matching" value="matching">
+                                  <input type="hidden" style="visibility: hidden;" name="message" id="message" value="User <%= reqUser %> would like to match with you, message them to get chatting!">
+                                  <input type="submit" class="btn btn-outline-danger btn-lg btn-block" style="background-color: #FBC6FA; color: rgb(255, 0, 140);">
+                                </form>
                               </div>
                             </div>
                           </div>

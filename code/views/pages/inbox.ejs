@@ -34,6 +34,7 @@
                             <div class="row">
                                 <div class="col"><b>Sender</b></div>
                                 <div class="col"><b>Message</b></div>
+                                <div class="col"><b>Delete Message</b></div>
                             </div>
                             
                             <% messages.forEach(element => { %>
@@ -43,6 +44,12 @@
                                     <%= element['username'] %>
                                 </div> <div class="col">
                                     <%= element['message'] %>
+                                </div>
+                                <div class="col">
+                                  <form action="/deletemessage" method="POST">
+                                    <input type="hidden" style="visibility: hidden;" name="message_id" id="message_id" value="<%= element['message_id'] %>">
+                                    <input type="submit" class="btn btn-danger">
+                                  </form>
                                 </div>
                             </div>
                             <% }); %>
