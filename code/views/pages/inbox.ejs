@@ -30,7 +30,8 @@
                         <h3 class="mb-4 mt-4">Received Messages</h3>
                         <div class="mb-4" style = "border-bottom-style:solid;"></div>
 
-                        <div class="container p-3 pt-1">    
+                        <% if (messages.length > 0) { %>
+                        <!-- <div class="container p-3 pt-1">    
                             <div class="row">
                                 <div class="col"><b>Sender</b></div>
                                 <div class="col"><b>Message</b></div>
@@ -55,9 +56,38 @@
                             <% }); %>
                     
                             </div>
-                        </div>
+                        </div> -->
+                          <% messages.forEach(element => { %>
+                          <div class="card shadow-2-strong row-3 mb-3" style = "background-color: #ffffff;">
+                            <div class="container p-3">
+                              <div class="row">
+                                <div class="col-10">
+                                  <p style="text-align:left;">
+                                    &emsp;&emsp; From: <%= element['username'] %>
+                                  </p>
+                                </div>
+                                <div class="col-2 pb-3">
+                                  <form action="/deletemessage" method="POST">
+                                    <input type="hidden" style="visibility: hidden;" name="message_id" id="message_id" value="<%= element['message_id'] %>">
+                                    <input type="submit" class="btn btn-danger" value="Delete">
+                                  </form>
+                                </div>
+                                <div class="col-12">
+                                  <div class="mb-2 pt-2" style = "border-bottom-style:solid;"></div>
+                                </div>
+                              </div>
+                            </div>
 
-                        <h3 class="mb-4">Send a Message</h3>
+                            <p class="p-5 pt-0 pb-3" style="text-align:left;">
+                              &emsp;&emsp;<%= element['message'] %>
+                            </p>
+                          </div>
+                          <% }); %>
+                        <% } else { %>
+                          <p>You do not have any received messages.</p>
+                        <% } %>
+
+                        <h3 class="mb-4 mt-5">Send a Message</h3>
                         <div class="mb-4" style = "border-bottom-style:solid;"></div>
                       
                         <form class="pb-5" action="/sendmessage" method="POST">
