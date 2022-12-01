@@ -1,62 +1,75 @@
-<%- include ('../partials/header') %> <%- include ('../partials/menu') %>
-<main>
-  <div class="page-content page-container" id="page-content" style = "background-color: #CFD8D7;">
-    <div class="padding">
-        <div class="container d-flex justify-content-center p-5">
+<%- include ('../partials/header') %>
+  <%- include ('../partials/menu') %>
+    <main>
+      <div class="page-content page-container" id="page-content" style="background-color: #CFD8D7;">
+        <div class="padding">
+          <div class="container d-flex justify-content-center p-5">
 
-          <div class="col-lg-8 grid-margin stretch-card" style = "background-color: #CFD8D7; padding-top: 50px;">
-              <div class="card" style = "background-color:#B5C9C3;">
+            <div class="col-lg-8 grid-margin stretch-card" style="background-color: #CFD8D7; padding-top: 50px;">
+              <div class="card" style="background-color:#B5C9C3;">
                 <div class="card-body">
-                  <p class="card-description position-relative pt-3 pb-2" style = "text-align: center;">
+                  <p class="card-description position-relative pt-3 pb-2" style="text-align: center;">
                     <img src="https://i.imgur.com/2rdztLF.gif">
                   </p>
-                  <div class="pb-1 mt-4" style = "border-bottom-style:solid; "></div>
-                  
+                  <div class="pb-1 mt-4" style="border-bottom-style:solid; "></div>
+
 
                   <div class="container mt-5">
                     <div class="column">
-                      <% foundUsers.forEach(element => { %>
+                      <% foundUsers.forEach(element=> { %>
 
-                        <div class="card shadow-2-strong row-3 p-1 mb-3 position-relative" style = "background-color: #CFD8D7;">
+                        <div class="card shadow-2-strong row-3 p-1 mb-3 position-relative"
+                          style="background-color: #CFD8D7;">
                           <!-- Replace with local image if possible -->
                           <div class="container mt-3">
                             <div class="row">
                               <div class="col-2">
-                                <img width="100" height="100" src="https://media.istockphoto.com/id/1223671392/vector/default-profile-picture-avatar-photo-placeholder-vector-illustration.jpg?s=612x612&w=0&k=20&c=s0aTdmT5aU6b8ot7VKm11DeID6NctRCpB755rA1BIP0=">
+                                <img width="100" height="100"
+                                  src="https://media.istockphoto.com/id/1223671392/vector/default-profile-picture-avatar-photo-placeholder-vector-illustration.jpg?s=612x612&w=0&k=20&c=s0aTdmT5aU6b8ot7VKm11DeID6NctRCpB755rA1BIP0=">
                               </div>
                               <div class="col-10">
-                                  <h3><%= element['username'] %></h3>
-                                  <div class="mb-2 pt-2" style = "border-bottom-style:solid;"></div>
-                                  <div class="container p-0">
-                                    <div class="row">
-                                      <div class="col-6">
-                                        <p>Rent Range: $<%= element['min_rent'] %> - $<%= element['max_rent'] %></p>
-                                      </div>
-                                      <div class="col-6">
-                                        <p>Graduation Year: <%= element['graduation_year']%></p>
-                                      </div>
+                                <h3>
+                                  <%= element['username'] %>
+                                </h3>
+                                <div class="mb-2 pt-2" style="border-bottom-style:solid;"></div>
+                                <div class="container p-0">
+                                  <div class="row">
+                                    <div class="col-6">
+                                      <p>Rent Range: $<%= element['min_rent'] %> - $<%= element['max_rent'] %>
+                                      </p>
+                                    </div>
+                                    <div class="col-6">
+                                      <p>Graduation Year: <%= element['graduation_year']%>
+                                      </p>
                                     </div>
                                   </div>
+                                </div>
                               </div>
                             </div>
                           </div>
 
                           <div class="container mt-3 pb-3">
-                            <div class="row"> 
+                            <div class="row">
                               <div class="col-10">
                                 &emsp;&emsp;<%= element['about_me'] %>
                               </div>
                               <div class="col-2 position-absolute end-0">
-                                <form action="/sendmessage" method="POST">
-                                  <input type="hidden" style="visibility: hidden;" name="recipient" id="recipient" value="<%= element['username'] %>">
-                                  <input type="hidden" style="visibility: hidden;" name="matching" id="matching" value="matching">
-                                  <input type="hidden" style="visibility: hidden;" name="message" id="message" value="User <%= reqUser %> would like to match with you, message them to get chatting!">
-                                  <input type="submit" value="Match" class="btn btn-outline-danger btn-lg btn-block" style="background-color: #FBC6FA; color: rgb(255, 0, 140);">
+
+                                <!-- calls match function, if the funtion returns true, then the senf message fuction is called-->>
+                                <form action="/match" method="POST">
+                                  <input type="hidden" style="visibility: hidden;" name="recipient" id="recipient"
+                                    value="<%= element['username'] %>">
+                                  <input type="hidden" style="visibility: hidden;" name="matching" id="matching"
+                                    value="matching">
+                                  <input type="hidden" style="visibility: hidden;" name="message" id="message"
+                                    value="User <%= reqUser %> would like to match with you, message them to get chatting!">
+                                  <input type="submit" value="Match" class="btn btn-outline-danger btn-lg btn-block"
+                                    style="background-color: #FBC6FA; color: rgb(255, 0, 140);">
                                 </form>
                               </div>
                             </div>
                           </div>
-                          
+
 
                         </div>
                         <!-- <tr>
@@ -70,17 +83,17 @@
                           </td>
                         </tr> -->
 
-                      <%}) %> 
-                    </div>                      
+                        <%}) %>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-            
-            </div>
-              </div>
-            </div>
-</main>
+
+          </div>
+        </div>
+      </div>
+    </main>
 
 
-<%- include ('../partials/footer') %>
+    <%- include ('../partials/footer') %>
