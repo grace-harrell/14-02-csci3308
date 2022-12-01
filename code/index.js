@@ -158,20 +158,20 @@ app.post("/register", async (req, res) => {
   const max_rent = req.body.max_rent;
   const about_me = req.body.about_me;
   const hash = await bcrypt.hash(req.body.password, 10);
-  var query = 'insert into users (is_admin, username, password, housing_id, graduation_year, graduation_season_id, min_rent, max_rent, about_me) values ' + 
-              '(False, \'' + req.body.username + '\', \'' + hash + '\', ' + housing_id + ', ' + graduation_year + ', 0, ' +
-              min_rent + ', ' + max_rent + ', \'' + about_me + '\')';
+  var query = 'insert into users (is_admin, username, password, housing_id, graduation_year, graduation_season_id, min_rent, max_rent, about_me) values ' +
+    '(False, \'' + req.body.username + '\', \'' + hash + '\', ' + housing_id + ', ' + graduation_year + ', 0, ' +
+    min_rent + ', ' + max_rent + ', \'' + about_me + '\')';
 
   console.log(query);
   db.any(query)
-      .then(function (data) {
-          console.log(data);
-          res.redirect('/login');
-      })
-      .catch(function (err) {
-          console.log(err);
-          res.redirect('/register');
-      });
+    .then(function (data) {
+      console.log(data);
+      res.redirect('/login');
+    })
+    .catch(function (err) {
+      console.log(err);
+      res.redirect('/register');
+    });
 });
 
 
@@ -188,8 +188,6 @@ const auth = (req, res, next) => {
   }
   next();
 };
-
-
 
 
 
@@ -230,14 +228,14 @@ app.get("/roommates", (req, res) => {
           let numFoundUsers = 0;
 
           allusers.forEach(element => {
-            if(userreqdata[0]['graduation_year'] == element['graduation_year']) {
-              if(userreqdata[0]['min_rent'] > (element['min_rent'] - 200) && userreqdata[0]['min_rent'] < (element['min_rent'] + 200)) {
-                if(userreqdata[0]['min_rent'] > (element['min_rent'] - 200) && userreqdata[0]['min_rent'] < (element['min_rent'] + 200)) {
+            if (userreqdata[0]['graduation_year'] == element['graduation_year']) {
+              if (userreqdata[0]['min_rent'] > (element['min_rent'] - 200) && userreqdata[0]['min_rent'] < (element['min_rent'] + 200)) {
+                if (userreqdata[0]['min_rent'] > (element['min_rent'] - 200) && userreqdata[0]['min_rent'] < (element['min_rent'] + 200)) {
                   if (!foundUsers.includes(element) && !(element['username'] == req.session.user.username)) {
                     foundUsers[numFoundUsers] = element;
                     numFoundUsers++;
                   }
-                  
+
                 }
               }
             }
@@ -248,7 +246,7 @@ app.get("/roommates", (req, res) => {
           //I will store the json data in the req.session.user object for easy use.
 
           req.session.user['foundUsers'] = foundUsers;
-          res.render("pages/roommates.ejs", {foundUsers: req.session.user['foundUsers'], reqUser: req.session.user.username});
+          res.render("pages/roommates.ejs", { foundUsers: req.session.user['foundUsers'], reqUser: req.session.user.username });
         })
         .catch(function (err) {
           console.log(err);
@@ -296,7 +294,7 @@ app.get("/inbox", async (req, res) => {
     .then(function (data) {
       // This should be changed when the inbox has been figured out.
       console.log(data);
-      res.render('pages/inbox.ejs', {messages: data});
+      res.render('pages/inbox.ejs', { messages: data });
     })
     .catch(function (err) {
       res.redirect("/");
@@ -328,22 +326,22 @@ app.post("/sendmessage", async (req, res) => {
       // This next query will insert the message data into the 'messages' table of the db, and return the serialized message_id primary key for inserting into the user_to_messages relation.
       var messagequery = await db.any(
         "insert into messages (sender_id, message) values (" +
-          senderId +
-          ", '" +
-          req.body.message +
-          "') returning message_id;"
+        senderId +
+        ", '" +
+        req.body.message +
+        "') returning message_id;"
       );
       // This next query will use the serialized primary key to link the recipient to the message sent.
       var linkmessage = await db.any(
         "insert into user_to_messages (recipient_id, message_id) values (" +
-          recipientID +
-          ", " +
-          messagequery[0]["message_id"] +
-          ");"
+        recipientID +
+        ", " +
+        messagequery[0]["message_id"] +
+        ");"
       );
 
       // Change as needed.
-      if(req.body.matching) {
+      if (req.body.matching) {
         res.redirect('/roommates')
       } else {
         res.redirect('/inbox');
@@ -355,15 +353,96 @@ app.post("/sendmessage", async (req, res) => {
     });
 });
 
+// match functionality
+app.post("/match", async (req, res) => {
+  console.log("match test call");
+
+  /*
+  *** Code copied from sendmessage so that the match functionality can perfrom multiple actions on form call ***
+  TODO:
+   - 
+  POST REQUEST:
+   REQ:
+    - Send username of recipient as 'recipient' in post request body
+    - Send message as 'message' in post request body
+   RES:
+    - Sends message and returns status response in json format.
+*/
+
+  // This query returns the recipient's user_id from the db.
+  var query1 =
+    "select user_id from users where username='" + req.body.recipient + "';";
+  console.log(query1);
+  // Gathers the sender_id from the user's saved session data, populated on login.
+  // sender_id also used as the user_id for user_matches
+  var senderId = req.session.user["user_id"];
+
+  db.any(query1)
+    .then(async function (data) {
+      // This next line extracts the recipient's id from the data returned by the db.
+      // recipientID also used as the match_id for user_matches
+      var recipientID = data[0]["user_id"];
+
+      // TO:DO create a query that checks if the match already exists and a condition to avoid
+      // duplicated matched
+
+      var matchexists1 = await db.any(
+        "select user_id from user_matches where user_id ='" + senderId + "' and match_id ='" + recipientID + "';");
+      var matchexists2 = await db.any(
+        "select user_id from user_matches where user_id ='" + recipientID + "' and match_id ='" + senderId + "';");
+      console.log(matchexists1);
+      console.log(matchexists2);
+
+      if (!matchexists1[0] && !matchexists2[0]) {
+        // This next query will insert the message data into the 'messages' table of the db, and return the serialized message_id primary key for inserting into the user_to_messages relation.
+        var messagequery = await db.any(
+          "insert into messages (sender_id, message) values (" +
+          senderId +
+          ", '" +
+          req.body.message +
+          "') returning message_id;"
+        );
+        // This next query will use the serialized primary key to link the recipient to the message sent.
+        var linkmessage = await db.any(
+          "insert into user_to_messages (recipient_id, message_id) values (" +
+          recipientID +
+          ", " +
+          messagequery[0]["message_id"] +
+          ");"
+        );
+        //This next funtion addes the match to the user_match table
+        var creatematch = await db.any(
+          "insert into user_matches (user_id, match_id) values (" + senderId + "," + recipientID + ");"
+        );
+        console.log("match added to db");
+      }
+      else {
+        console.log("match already exists");
+      }
+      // Change as needed.
+      if (req.body.matching) {
+        res.redirect('/roommates')
+      } else {
+        res.redirect('/inbox');
+      }
+    })
+    .catch(function (err) {
+      console.log(err);
+      res.redirect("/inbox");
+    });
+
+
+});
+
 
 app.post("/updateprofile", (req, res) => {
   var query = 'update users set about_me = \'' + req.body.about_me + '\', housing_id = ' +
-              req.body.housing_id + ', graduation_year = ' + req.body.graduation_year + ', min_rent = ' +
-              req.body.min_rent + ', max_rent = ' + req.body.max_rent + ' where username = \'' + req.session.user.username + '\';';
-      
+    req.body.housing_id + ', graduation_year = ' + req.body.graduation_year + ', min_rent = ' +
+    req.body.min_rent + ', max_rent = ' + req.body.max_rent + ' where username = \'' + req.session.user.username + '\';';
+
   console.log(query);
-  
-  
+
+
   db.any(query)
     .then(function (data) {
       var query = "select * from users where username = '" + req.session.user.username + "';";
@@ -396,7 +475,7 @@ app.post("/updateprofile", (req, res) => {
       console.log("Error in updateprofile db query.");
       res.redirect("/");
     });
-    
+
 });
 
 app.post("/deletemessage", (req, res) => {
@@ -415,29 +494,29 @@ app.post("/deletemessage", (req, res) => {
 
   db.any(query1)
     .then(function (data1) {
-      
-      if(data1[0]['recipient_id'] == req.session.user['user_id']) {
+
+      if (data1[0]['recipient_id'] == req.session.user['user_id']) {
         console.log("good request found user");
         console.log(data1);
 
-        
-        db.any(query2)
-        .then(function (data2) {
 
-          db.any(query3)
-            .then(function (data3) {
+        db.any(query2)
+          .then(function (data2) {
+
+            db.any(query3)
+              .then(function (data3) {
 
                 res.redirect("/inbox");
 
-            })
-            .catch(function (err) {
-              console.log("Error in deletemessage." + err);
-            });
+              })
+              .catch(function (err) {
+                console.log("Error in deletemessage." + err);
+              });
 
-        })
-        .catch(function (err) {
-          console.log("Error in deletemessage." + err);
-        });
+          })
+          .catch(function (err) {
+            console.log("Error in deletemessage." + err);
+          });
 
       }
     })
