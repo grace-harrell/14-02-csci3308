@@ -1,0 +1,9 @@
+New Features:
+ - Functional inbox added - you can now send messages to other users by so long as they you have a user name
+ - Match feature integrates - you can now match with other users that show up on your discover page by clicking the match button
+   - upon matching a message will be sent to your match request's inbox
+   - a fix was added that prevents duplicate matches and inbox spam
+   
+ Updates:
+  - The Roomates page UI is updated so that you can now see your roomate's profile inforation as well as select to match with them
+  - The Inbox UI was revamped
