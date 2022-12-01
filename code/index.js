@@ -382,6 +382,10 @@ app.post("/match", async (req, res) => {
       // This next line extracts the recipient's id from the data returned by the db.
       // recipientID also used as the match_id for user_matches
       var recipientID = data[0]["user_id"];
+
+      // TO:DO create a query that checks if the match already exists and a condition to avoid
+      // duplicated matched
+
       // This next query will insert the message data into the 'messages' table of the db, and return the serialized message_id primary key for inserting into the user_to_messages relation.
       var messagequery = await db.any(
         "insert into messages (sender_id, message) values (" +
@@ -398,6 +402,11 @@ app.post("/match", async (req, res) => {
         messagequery[0]["message_id"] +
         ");"
       );
+      //This next funtion addes the match to the user_match table
+      var creatematch = await db.any(
+        "insert into user_matches (user_id, match_id) values (" + senderId + "," + recipientID + ");"
+      );
+      console.log("match added to db");
 
       // Change as needed.
       if (req.body.matching) {
