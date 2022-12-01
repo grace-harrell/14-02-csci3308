@@ -386,28 +386,39 @@ app.post("/match", async (req, res) => {
       // TO:DO create a query that checks if the match already exists and a condition to avoid
       // duplicated matched
 
-      // This next query will insert the message data into the 'messages' table of the db, and return the serialized message_id primary key for inserting into the user_to_messages relation.
-      var messagequery = await db.any(
-        "insert into messages (sender_id, message) values (" +
-        senderId +
-        ", '" +
-        req.body.message +
-        "') returning message_id;"
-      );
-      // This next query will use the serialized primary key to link the recipient to the message sent.
-      var linkmessage = await db.any(
-        "insert into user_to_messages (recipient_id, message_id) values (" +
-        recipientID +
-        ", " +
-        messagequery[0]["message_id"] +
-        ");"
-      );
-      //This next funtion addes the match to the user_match table
-      var creatematch = await db.any(
-        "insert into user_matches (user_id, match_id) values (" + senderId + "," + recipientID + ");"
-      );
-      console.log("match added to db");
+      var matchexists1 = await db.any(
+        "select user_id from user_matches where user_id ='" + senderId + "' and match_id ='" + recipientID + "';");
+      var matchexists2 = await db.any(
+        "select user_id from user_matches where user_id ='" + recipientID + "' and match_id ='" + senderId + "';");
+      console.log(matchexists1);
+      console.log(matchexists2);
 
+      if (!matchexists1[0] && !matchexists2[0]) {
+        // This next query will insert the message data into the 'messages' table of the db, and return the serialized message_id primary key for inserting into the user_to_messages relation.
+        var messagequery = await db.any(
+          "insert into messages (sender_id, message) values (" +
+          senderId +
+          ", '" +
+          req.body.message +
+          "') returning message_id;"
+        );
+        // This next query will use the serialized primary key to link the recipient to the message sent.
+        var linkmessage = await db.any(
+          "insert into user_to_messages (recipient_id, message_id) values (" +
+          recipientID +
+          ", " +
+          messagequery[0]["message_id"] +
+          ");"
+        );
+        //This next funtion addes the match to the user_match table
+        var creatematch = await db.any(
+          "insert into user_matches (user_id, match_id) values (" + senderId + "," + recipientID + ");"
+        );
+        console.log("match added to db");
+      }
+      else {
+        console.log("match already exists");
+      }
       // Change as needed.
       if (req.body.matching) {
         res.redirect('/roommates')
