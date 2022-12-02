@@ -246,7 +246,7 @@ app.get("/roommates", (req, res) => {
           //I will store the json data in the req.session.user object for easy use.
 
           req.session.user['foundUsers'] = foundUsers;
-          res.render("pages/roommates.ejs", { foundUsers: req.session.user['foundUsers'], reqUser: req.session.user.username });
+          res.render("pages/roommates.ejs", { foundUsers: req.session.user['foundUsers'], reqUser: req.session.user.username, reqAbout: req.session.user.about_me });
         })
         .catch(function (err) {
           console.log(err);
