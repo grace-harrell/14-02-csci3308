@@ -61,8 +61,11 @@ app.get('/logo.jpg', function (req, res) {
 });
 
 
-app.get("/", (req, res) => {
-  res.render("pages/home.ejs");
+app.get("/", async (req, res) => {
+  console.log("test2");
+  await res.render("pages/home.ejs", {
+    isloggedin: req.session.user != null,
+  });
 });
 
 
@@ -528,6 +531,8 @@ app.post("/deletemessage", (req, res) => {
 
 
 app.get("/", (req, res) => {
+  console.log("test");
+  console.log(req.session.user.username);
   res.render("pages/home.ejs", {
     username: req.session.user.username,
     housing_id: req.session.user.housing_id,

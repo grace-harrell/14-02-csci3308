@@ -11,11 +11,27 @@
                 <div class="card-body py-5">
 
                   <h4 class="pb-4">RoomMate is a dating-style app that can help you find other students to live with while you study at CU.</h4>
-                  <h4>Log in or create an account to start finding your perfect roommates!</h4>
 
-                  <a href="/register">
-                    <button class="btn btn-primary btn-lg btn-block mt-5" style = "background-color: #CFD8D7; color: black;">Create Account</button>
-                  </a>
+                  <% if (isloggedin == false) { %>
+                  <h4> Log in or create an account to start finding your perfect roommates! </h4>
+                  <div class="container pb-4">
+                    <div class="row">
+                      <div class="col-5 position-relative">
+                        <a href="/login">
+                          <button class="btn btn-primary btn-lg btn-block mt-5 position-absolute start-0" style = "background-color: #CFD8D7; color: black;">Log In</button>
+                        </a>
+                      </div>
+                      <div class="col-7 position-relative">
+                        <a href="/register position-absolute end-25">
+                          <button class="btn btn-primary btn-lg btn-block mt-5 position-absolute end-0" style = "background-color: #CFD8D7; color: black;">Create Account</button>
+                        </a>
+                      </div>
+                    </div>
+                    <div class="mb-5 pb-3"></div>
+                  </div>
+                  <% } else { %>
+                  <h4> Click on Roommates to find your perfect match! </h4>
+                  <% } %>
                   
                 </div>
               </div>
